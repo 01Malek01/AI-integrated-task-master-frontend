@@ -4,6 +4,7 @@ import { AuthContextType, User } from "../../types";
 import useLogin from "@/app/hooks/api/auth/useLogin";
 import useRegister from "@/app/hooks/api/auth/useRegister";
 import useCheckAuth from "@/app/hooks/api/auth/useCheckAuth";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 
 
@@ -18,19 +19,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Update user state when auth data changes
     useEffect(() => {
         if (authData && !isInitialized) {
-            setUser(authData.user);
+            setUser(authData?.data?.user);
             setIsInitialized(true);
         }
-    }, [authData, isInitialized]);
+    }, [authData, isInitialized ]);
+
 
     const login = async ({email , password }: {
         email: string;
         password: string;
     }) => {
-        const user = await loginMutation({email , password });
-        setUser(user);
-        console.log(' success login',user);
-        return user;
+        const res = await loginMutation({email , password });
+        setUser(res?.data?.user);
     };
     
     const logout = async () => {
@@ -49,32 +49,33 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         email: string;
         password: string;
     }) => {
-        const user = await registerMutation({username , email , password });
-        setUser(user);
-        console.log(' success register',user);
-        return user;
+        const res = await registerMutation({username , email , password });
+        setUser(res?.data?.user);
     };
 
     // Show loading state while checking auth status
     if (isLoading && !isInitialized) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner size={14} color="var(--color-primary)" />;
     }
+    const value: AuthContextType = {
+        user,
+        login,
+        logout,
+        register,
+        loginIsPending,
+        registerIsPending,
+        logoutIsPending: false,
+        loginError,
+        registerError,
+        logoutError: checkAuthError,
+        isInitialized,
+        isAuthenticated: !!user,
+        isAdmin: user?.isAdmin || false,
+        isLoading: !isInitialized
+    };
+
     return (
-        <AuthContext.Provider 
-            value={{ 
-                user, 
-                login, 
-                logout, 
-                register,
-                loginError,
-                registerError,
-                logoutError: checkAuthError,
-                loginIsPending,
-                registerIsPending,
-                logoutIsPending: false, // Since we're not using the logout mutation anymore
-                isInitialized
-            }}
-        >
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,16 +1,27 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import ClientLayout from './client-layout';
-
+ 
 export const metadata: Metadata = {
-  title: 'Tasks Master',
-  description: 'Manage your tasks and notes in one place',
-};
+  title: 'Task Manager',
+  description: 'Manage your tasks efficiently',
+};  
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <ClientLayout>{children}</ClientLayout>;
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
+      </body>
+    </html>
+  );
 }

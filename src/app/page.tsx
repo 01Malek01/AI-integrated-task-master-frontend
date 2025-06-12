@@ -1,5 +1,7 @@
 'use client'
-import { useState } from "react";
+import { useAuth } from "@/providers/auth-provider";
+import { useEffect, useState } from "react";
+import useGetTasks from "./hooks/api/task/useGetTasks";
 
 interface Task {
   id: number;
@@ -10,22 +12,23 @@ interface Task {
 
 interface Note {
   id: number;
-  title: string;
   lastEdited: string;
 }
 
 const page: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: 'Grocery Shopping', dueDate: 'Due Today', completed: false },
-    { id: 2, title: 'Book Appointment', dueDate: 'Due Tomorrow', completed: false },
-    { id: 3, title: 'Pay Bills', dueDate: 'Due in 2 days', completed: false },
-    { id: 4, title: 'Schedule Meeting', dueDate: 'Due in 3 days', completed: false },
-  ]);
-
+  const {user} = useAuth();
+const {data, isLoading, error,refetch} = useGetTasks(); 
+  const [tasks, setTasks] = useState<Task[]>([]);
+useEffect(() => {
+  if(data){
+    console.log('data ',data)
+    setTasks(data);
+  }
+}, [data]);
   const [notes] = useState<Note[]>([
-    { id: 1, title: 'Project Ideas', lastEdited: 'Last edited 2 days ago' },
-    { id: 2, title: 'Travel Plans', lastEdited: 'Last edited 3 days ago' },
-    { id: 3, title: 'Personal Goals', lastEdited: 'Last edited 4 days ago' },
+    { id: 1, lastEdited: 'Last edited 2 days ago' },
+    { id: 2, lastEdited: 'Last edited 3 days ago' },
+    { id: 3, lastEdited: 'Last edited 4 days ago' },
   ]);
 
   const toggleTask = (id: number) => {
@@ -43,7 +46,6 @@ const page: React.FC = () => {
     };
     setTasks([...tasks, newTask]);
   };
-
   return (
     <div 
       className="relative flex size-full min-h-screen flex-col bg-[#f9fbf9] group/design-root overflow-x-hidden"
@@ -58,12 +60,15 @@ const page: React.FC = () => {
         <div className="px-40 flex flex-1 justify-center py-5">
           <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
             <div className="flex flex-wrap justify-between gap-3 p-4">
-              <p className="text-[#121a0f] tracking-light text-[32px] font-bold leading-tight min-w-72">Welcome back, Sarah</p>
+              <p className="text-[#121a0f] tracking-light text-[32px] font-bold leading-tight min-w-72">Welcome back, {user?.username}</p>
             </div>
             
             <h3 className="text-[#121a0f] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Tasks</h3>
             
-            {tasks.map((task) => (
+            {tasks.length === 0 ? ( 
+              <p>No tasks found</p>
+              ) : (
+                tasks.map((task:Task) => (
               <div key={task.id} className="flex items-center gap-4 bg-[#f9fbf9] px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f5ee] transition-colors">
                 <div className="flex items-center gap-4">
                   <div className="text-[#121a0f] flex items-center justify-center rounded-lg bg-[#ebf2e9] shrink-0 size-12">
@@ -89,11 +94,12 @@ const page: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            )) 
+          )}
             
             <h3 className="text-[#121a0f] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Notes</h3>
             
-            {notes.map((note) => (
+            {notes.map((note:Note) => (
               <div key={note.id} className="flex items-center gap-4 bg-[#f9fbf9] px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f5ee] transition-colors cursor-pointer">
                 <div className="flex items-center gap-4">
                   <div className="text-[#121a0f] flex items-center justify-center rounded-lg bg-[#ebf2e9] shrink-0 size-12">

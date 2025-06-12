@@ -14,7 +14,7 @@ export default function LoadingSpinner({
   className = '',
 }: LoadingSpinnerProps) {
   return (
-    <div className={`flex items-center justify-center ${className}`}>
+    <div className={`flex items-center justify-center h-screen ${className}`}>
       <BeatLoader 
         color={color} 
         size={size} 
