@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --color-primary: #50d22c;
+  --color-primary-light: #e8f8e5;
+  --color-primary-dark: #3aa81c;
+  
+  /* Text Colors */
+  --color-text: #121810;
+  --color-text-light: #4b5563;
+  --color-text-lighter: #6b7280;
+  --color-text-on-primary: #ffffff;
+  
+  /* Background Colors */
+  --color-bg: #f9fbf9;
+  --color-bg-light: #ffffff;
+  --color-bg-dark: #f3f4f6;
+  
+  /* Border Colors */
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Priority Colors */
+  --color-priority-high: #fef2f2;
+  --color-priority-high-text: #991b1b;
+  --color-priority-medium: #fffbeb;
+  --color-priority-medium-text: #92400e;
+  --color-priority-low: #f0fdf4;
+  --color-priority-low-text: #166534;
+  
+  /* Shadow */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Custom styles */
+.form-input:focus {
+  --tw-ring-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(80, 210, 44, 0.2);
+  border-color: var(--color-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .layout-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
+/* Base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-[var(--color-bg)] text-[var(--color-text)];
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-[var(--color-primary)] text-[var(--color-text-on-primary)] hover:bg-[var(--color-primary-dark)];
+}
+
+.btn-outline {
+  @apply border border-[var(--color-border)] hover:bg-[var(--color-bg-dark)];
+}
+
+/* Card styles */
+.card {
+  @apply bg-[var(--color-bg-light)] rounded-lg shadow-[var(--shadow)] p-6;
+}
+
+/* Form styles */
+.form-label {
+  @apply block text-sm font-medium text-[var(--color-text-light)] mb-1;
+}
+
+.form-input {
+  @apply w-full px-3 py-2 border border-[var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)];
+}
+
+/* Priority badges */
+.priority-high {
+  @apply bg-[var(--color-priority-high)] text-[var(--color-priority-high-text)];
+}
+
+.priority-medium {
+  @apply bg-[var(--color-priority-medium)] text-[var(--color-priority-medium-text)];
+}
+
+.priority-low {
+  @apply bg-[var(--color-priority-low)] text-[var(--color-priority-low-text)];
 }

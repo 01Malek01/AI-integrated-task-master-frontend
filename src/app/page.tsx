@@ -1,103 +1,125 @@
-import Image from "next/image";
+'use client'
+import { useState } from "react";
 
-export default function Home() {
+interface Task {
+  id: number;
+  title: string;
+  dueDate: string;
+  completed: boolean;
+}
+
+interface Note {
+  id: number;
+  title: string;
+  lastEdited: string;
+}
+
+const page: React.FC = () => {
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: 1, title: 'Grocery Shopping', dueDate: 'Due Today', completed: false },
+    { id: 2, title: 'Book Appointment', dueDate: 'Due Tomorrow', completed: false },
+    { id: 3, title: 'Pay Bills', dueDate: 'Due in 2 days', completed: false },
+    { id: 4, title: 'Schedule Meeting', dueDate: 'Due in 3 days', completed: false },
+  ]);
+
+  const [notes] = useState<Note[]>([
+    { id: 1, title: 'Project Ideas', lastEdited: 'Last edited 2 days ago' },
+    { id: 2, title: 'Travel Plans', lastEdited: 'Last edited 3 days ago' },
+    { id: 3, title: 'Personal Goals', lastEdited: 'Last edited 4 days ago' },
+  ]);
+
+  const toggleTask = (id: number) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const addTask = () => {
+    const newTask: Task = {
+      id: tasks.length + 1,
+      title: 'New Task',
+      dueDate: 'Due Soon',
+      completed: false
+    };
+    setTasks([...tasks, newTask]);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div 
+      className="relative flex size-full min-h-screen flex-col bg-[#f9fbf9] group/design-root overflow-x-hidden"
+      style={{
+        '--checkbox-tick-svg': "url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(18,26,15)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e')",
+        fontFamily: 'Manrope, "Noto Sans", sans-serif'
+      } as React.CSSProperties}
+    >
+      <div className="layout-container flex h-full grow flex-col">
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        
+        <div className="px-40 flex flex-1 justify-center py-5">
+          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div className="flex flex-wrap justify-between gap-3 p-4">
+              <p className="text-[#121a0f] tracking-light text-[32px] font-bold leading-tight min-w-72">Welcome back, Sarah</p>
+            </div>
+            
+            <h3 className="text-[#121a0f] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Tasks</h3>
+            
+            {tasks.map((task) => (
+              <div key={task.id} className="flex items-center gap-4 bg-[#f9fbf9] px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f5ee] transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="text-[#121a0f] flex items-center justify-center rounded-lg bg-[#ebf2e9] shrink-0 size-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                      <path d="M80,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm136,56H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM44,52A12,12,0,1,0,56,64,12,12,0,0,0,44,52Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,116Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,180Z"></path>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <p className={`text-base font-medium leading-normal line-clamp-1 ${task.completed ? 'text-[#639155] line-through' : 'text-[#121a0f]'}`}>
+                      {task.title}
+                    </p>
+                    <p className="text-[#639155] text-sm font-normal leading-normal line-clamp-2">{task.dueDate}</p>
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  <div className="flex size-7 items-center justify-center">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleTask(task.id)}
+                      className="h-5 w-5 rounded border-[#d6e5d2] border-2 bg-transparent text-[#53d22c] checked:bg-[#53d22c] checked:border-[#53d22c] checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-[#d6e5d2] focus:outline-none cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            <h3 className="text-[#121a0f] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Notes</h3>
+            
+            {notes.map((note) => (
+              <div key={note.id} className="flex items-center gap-4 bg-[#f9fbf9] px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f5ee] transition-colors cursor-pointer">
+                <div className="flex items-center gap-4">
+                  <div className="text-[#121a0f] flex items-center justify-center rounded-lg bg-[#ebf2e9] shrink-0 size-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                      <path d="M88,96a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H96A8,8,0,0,1,88,96Zm8,40h64a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16Zm32,16H96a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16ZM224,48V156.69A15.86,15.86,0,0,1,219.31,168L168,219.31A15.86,15.86,0,0,1,156.69,224H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H152V160a8,8,0,0,1,8-8h48V48H48Zm120-40v28.7L196.69,168Z"></path>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <p className="text-[#121a0f] text-base font-medium leading-normal line-clamp-1">{note.title}</p>
+                    <p className="text-[#639155] text-sm font-normal leading-normal line-clamp-2">{note.lastEdited}</p>
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  <div className="text-[#121a0f] flex size-7 items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                      <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
-}
+};
+
+export default page;
