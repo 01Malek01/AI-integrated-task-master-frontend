@@ -1,7 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/providers/auth-provider';
 import NoteForm from '../components/NoteForm';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import NoteCard from '../components/NoteCard';
 
 interface Note {
   id: string;
@@ -12,8 +16,29 @@ interface Note {
 }
 
 export default function NotesPage() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading, isInitialized } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+
+  useEffect(() => {
+    if (isInitialized && !isAuthLoading && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, isAuthLoading, isInitialized, router]);
+
+  if (isAuthLoading || !isInitialized) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <LoadingSpinner size={14} color="var(--color-primary)" />
+      </div>
+    );
+  }
+
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const handleAddNote = (newNote: Omit<Note, 'id' | 'createdAt'>) => {
     const note: Note = {
@@ -85,39 +110,7 @@ export default function NotesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredNotes.map((note) => (
-                <div 
-                  key={note.id}
-                  className="bg-[var(--color-bg-light)] rounded-lg shadow-[var(--shadow)] overflow-hidden hover:shadow-[var(--shadow-md)] transition-shadow"
-                >
-                  <div className="p-5">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-lg font-semibold text-[var(--color-text)]">{note.title}</h3>
-                      <button
-                        onClick={() => deleteNote(note.id)}
-                        className="text-[var(--color-text-lighter)] hover:text-[var(--color-error)] transition-colors"
-                        aria-label="Delete note"
-                        title="Delete note"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                    {note.category && (
-                      <span className="inline-block bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] text-xs px-2 py-1 rounded-full mb-3">
-                        {note.category}
-                      </span>
-                    )}
-                    <p className="text-[var(--color-text-light)] mt-2 whitespace-pre-line">
-                      {note.content}
-                    </p>
-                    <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
-                      <p className="text-xs text-[var(--color-text-lighter)]">
-                        Created: {new Date(note.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+               <NoteCard key={note._id} note={note} />
               ))}
             </div>
           )}

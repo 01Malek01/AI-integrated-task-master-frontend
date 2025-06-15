@@ -1,7 +1,20 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { useAuth } from '@/providers/auth-provider';
+import { useRouter } from 'next/navigation';
 
 const ProfilePage = () => {
+    const { user, logout } = useAuth();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            router.push('/login');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-[var(--color-bg-light)] group/design-root overflow-x-hidden font-['Manrope','Noto_Sans',sans-serif]">
       <div className="layout-container flex h-full grow flex-col">
@@ -15,11 +28,11 @@ const ProfilePage = () => {
                   <div 
                     className="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32 bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)] flex items-center justify-center text-white text-4xl font-bold"
                   >
-                    SB
+                    {user?.username[0]}
                   </div>
                   <div className="flex flex-col items-center justify-center">
-                    <p className="text-[var(--color-text)] text-[22px] font-bold leading-tight tracking-[-0.015em] text-center">Sophia Bennett</p>
-                    <p className="text-[var(--color-primary-dark)] text-base font-normal leading-normal text-center">sophia.bennett@email.com</p>
+                    <p className="text-[var(--color-text)] text-[22px] font-bold leading-tight tracking-[-0.015em] text-center">{user?.username}</p>
+                    <p className="text-[var(--color-primary-dark)] text-base font-normal leading-normal text-center">{user?.email}</p>
                   </div>
                 </div>
               </div>
@@ -60,18 +73,18 @@ const ProfilePage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
               <div className="flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)]">
                 <p className="text-[var(--color-text-light)] text-base font-medium leading-normal">Tasks Completed</p>
-                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">125</p>
+                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{user?.tasks && user.tasks.length || 0}</p>
               </div>
               <div className="flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)]">
                 <p className="text-[var(--color-text-light)] text-base font-medium leading-normal">Notes Created</p>
-                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">350</p>
+                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{user?.notes && user.notes.length || 0}</p>
               </div>
             </div>
 
             {/* Log Out Button */}
             <div className="flex px-4 py-6 justify-center sm:justify-end">
-              <button className="btn-secondary flex min-w-[120px] max-w-[480px] items-center justify-center h-10 px-6 text-sm font-bold leading-normal tracking-[0.015em]">
-                <span className="truncate">Log Out</span>
+              <button onClick={handleLogout} className="btn-secondary flex min-w-[120px] max-w-[480px] items-center justify-center h-10 px-6 text-sm font-bold leading-normal tracking-[0.015em]">
+                <span className="truncate cursor-pointer hover:text-[var(--color-error)] transition-colors hover:underline">Log Out</span>
               </button>
             </div>
           </div>

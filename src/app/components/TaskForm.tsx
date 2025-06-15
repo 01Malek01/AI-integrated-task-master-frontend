@@ -8,7 +8,7 @@ import { Task } from '@/types/task';
 
 type Priority = 'low' | 'medium' | 'high';
 
-export default function TaskForm({ refetch }: { refetch: () => void }) {
+export default function TaskForm({ refetch,setTasks }: { refetch: () => void ,setTasks: (tasks: Task[]) => void }) {
   const { createTask, isPending ,error } = useCreateTask();
 
 const [formData , setFormData] = useState({
@@ -45,6 +45,7 @@ const [formData , setFormData] = useState({
             // category: 'general'
         });
         toast.success('Task created successfully');
+          setTasks(prev => [...prev, formData]);
         },
       onError: (error: any) => {
         toast.error(error?.response?.data?.message || 'Failed to create task');

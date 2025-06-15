@@ -1,14 +1,27 @@
 'use client';
 
-import { Bell } from 'lucide-react';
+import { Bell, LogIn, UserPlus } from 'lucide-react';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/providers/auth-provider';
 const userAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAI6kzXTdfmHxMRKGx5RrpRjelxd8mXLvDbSqOFHNyLrHAHGUvP-yhoDpLw_-VADF9aFIF0hoXAA39FolCBGIlDUqqm6KqhAMEPHAISvtjaDBxA7ri6O7D2Iw-ZB2T-QuIVb1b9k1R3AFFqpDyXwFaLiGUPKTAz2A2sKfPlM8zvMbv5tz5dwhcP3bMQJQY8SLfnRsbxlEyFG-9zwpqkrbFzcltUafVs9pPKy10_eolc7oDGYcs4LMsEHu7VKJBMCxHCMIETUq1Uxkc';
 
 export default function Header() {
-  return (
+  const { isAuthenticated, user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+return (  
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600 mr-3">
@@ -36,7 +49,9 @@ export default function Header() {
             </h1>
           </div>
           
-          <div className="flex items-center gap-4">
+          {
+            isAuthenticated ? (
+              <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
               <NavLink href="/">Home</NavLink>
               <NavLink href="/notes">Notes</NavLink>
@@ -70,6 +85,26 @@ export default function Header() {
             </button>
             </Link>
           </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link
+                href="/login"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>Login</span>
+              </Link>
+              <Link
+                href="/register"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors"
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>Register</span>
+              </Link>
+            </div>
+          )
+
+          }
         </div>
       </div>
     </header>
