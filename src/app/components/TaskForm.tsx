@@ -1,16 +1,33 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Sparkles } from 'lucide-react';
 import useCreateTask  from '@/app/hooks/api/task/useCreateTask';
 import { toast } from 'react-hot-toast';
 import { Task } from '@/types/task';
+import useGenerateDesc from '../hooks/api/AI/useGenerateDesc';
 
 type Priority = 'low' | 'medium' | 'high';
 
 export default function TaskForm({ refetch,setTasks }: { refetch: () => void ,setTasks: (tasks: Task[]) => void }) {
   const { createTask, isPending ,error } = useCreateTask();
+const [ isGenerating  , setIsGenerating] = useState(false);
+const { generateDesc, error : descError , isPending : descIsPending } = useGenerateDesc();
 
+const generateTaskDescription = async(title:string) => {
+  setIsGenerating(true);
+  try {
+    const desc = await generateDesc(title);
+    console.log('desc',desc);
+    setFormData({ ...formData, description: desc?.description || '' });
+    setIsGenerating(false);
+    
+
+  } catch (error) {
+      console.error(error);
+     setIsGenerating(false);
+     }
+}
 const [formData , setFormData] = useState({
     title: '',
     description: '',
@@ -74,15 +91,27 @@ const [formData , setFormData] = useState({
       </div>
 
       <div>
-        <label htmlFor="description" className="form-label">
-          Description
-        </label>
+        <div className="flex items-center justify-between relative">
+          <label htmlFor="description" className="form-label">
+            Description
+          </label>
+          {formData.title.trim() && (
+            <button
+             onClick={() => generateTaskDescription(formData.title)}
+              type="button"
+              className={`text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors absolute right-2 top-8 bg-white rounded-full p-1 cursor-pointer hover:bg-[var(--color-primary-light)] ${isGenerating ? 'opacity-50 animate-bounce cursor-not-allowed' : ''}`}
+              title="Generate with AI"
+            >
+              <Sparkles className="w-5 h-5" />
+            </button>
+          )}
+        </div>
         <textarea
           id="description"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           className="form-input min-h-[100px]"
-          placeholder="Task description"
+          placeholder={formData.title.trim() ? "Describe your task..." : "Task description"}
           rows={3}
         />
       </div>

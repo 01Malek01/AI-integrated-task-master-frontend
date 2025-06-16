@@ -69,20 +69,12 @@ return (
             </button>
             
             <Link href="/profile" className="hover:opacity-80 transition-opacity cursor-pointer   "> 
-            <button 
-              type="button" 
-              className="ml-2 w-8 h-8 rounded-full overflow-hidden hover:bg-gray-100 transition-colors cursor-pointer "
-              aria-label="User menu"
-              title="Account settings"
-            >
-              <img 
-                src={userAvatar} 
-                alt="User profile"
-                className="w-full h-full object-cover"
-                width={32}
-                height={32}
-              />
-            </button>
+        
+              <div 
+                    className="bg-center bg-no-repeat aspect-square bg-cover rounded-full p-3 w-11 h-11 bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)] flex items-center justify-center text-white text-2xl font-bold"
+                  >
+                    {user?.username[0]}
+                  </div>
             </Link>
           </div>
           ) : (

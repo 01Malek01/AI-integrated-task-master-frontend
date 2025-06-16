@@ -72,13 +72,13 @@ export interface TasksResponse {
 }
 
 export interface Note {
-    _id: string;
+    _id?: string;
     title: string;
     content: string;
     category: string;
-    createdAt: string;
-    updatedAt: string;
-    user: string;
+    createdAt?: string;
+    updatedAt?: string;
+    user?: string;
     lastEdited?: string;
 }
 
@@ -89,7 +89,8 @@ export interface CreateNoteInput {
   }
 
 export interface UpdateNoteInput extends Partial<CreateNoteInput> {
-    _id: string;
+    _id?: string;
+     
 }
 
 export interface NoteResponse {

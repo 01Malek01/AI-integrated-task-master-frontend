@@ -1,7 +1,8 @@
-import { Task } from '@/types/task'
-import React from 'react'
+import { Task } from '@/types/task';
+import React from 'react';
+import { formatNoteDate } from '../../utils/dateUtils';
 
-export default function TaskCard( { task ,  toggleTask } : { task : Task , toggleTask : (id : string) => void } ) {
+export default function TaskCard({ task, toggleTask }: { task: Task; toggleTask: (id: string) => void }) {
   return (
     <div key={task._id} className="flex items-center gap-4 bg-[#f9fbf9] px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f5ee] transition-colors">
     <div className="flex items-center gap-4">
@@ -14,7 +15,11 @@ export default function TaskCard( { task ,  toggleTask } : { task : Task , toggl
         <p className={`text-base font-medium leading-normal line-clamp-1 ${task.status === 'completed' ? 'text-[#639155] line-through' : 'text-[#121a0f]'}`}>
           {task.title}
         </p>
-        <p className="text-[#639155] text-sm font-normal leading-normal line-clamp-2">{task.dueDate}</p>
+        {task.dueDate && (
+          <p className="text-[#639155] text-sm font-normal leading-normal line-clamp-2">
+            Due {formatNoteDate(task.dueDate)}
+          </p>
+        )}
       </div>
     </div>
     <div className="shrink-0">

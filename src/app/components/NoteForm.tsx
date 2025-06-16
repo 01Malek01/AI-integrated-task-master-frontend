@@ -2,15 +2,16 @@
 
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { Note } from '../../../types';
 
 interface NoteFormProps {
-  onSubmit: (note: { title: string; content: string; category: string }) => void;
+  onSubmit: (newNote: Note) => void;
 }
 
 export default function NoteForm({ onSubmit }: NoteFormProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('general');
+  const [category, setCategory] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,13 +20,15 @@ export default function NoteForm({ onSubmit }: NoteFormProps) {
     onSubmit({
       title: title.trim(),
       content: content.trim(),
-      category
+      category,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
 
     // Reset form
     setTitle('');
     setContent('');
-    setCategory('general');
+    setCategory('');
   };
 
   return (

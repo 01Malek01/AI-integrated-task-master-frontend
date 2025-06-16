@@ -3,42 +3,40 @@ import { useAuth } from "@/providers/auth-provider";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { redirect } from "next/navigation";
-import { Home } from "lucide-react";
 import useGetTasks from "../hooks/api/task/useGetTasks";
 import TaskCard from "./TaskCard";
 import NoteCard from "./NoteCard";
-interface Task {
-  _id: string | number;
-  title: string;
-  dueDate: string;
-  completed: boolean;
-}
+import useGetNotes from "../hooks/api/note/useGetNotes";
+import useUpdateTaskStatus from "../hooks/api/task/useUpdateTaskStatus";
+import { Task } from "@/types/task";
+import { Note } from "../../../types";
 
-interface Note {
-  _id: string | number;
-  title: string;
-  lastEdited: string;
-}
 
-const page: React.FC = () => {
+
+
+const Home: React.FC = () => {
   const {user ,isAuthenticated , isInitialized ,isLoading: authLoading} = useAuth();
-const {data, isLoading, error,refetch} = useGetTasks(); 
-  const [tasks, setTasks] = useState<Task[]>([]);
+const {data : tasksData, isLoading : tasksLoading, error : tasksError,refetch : tasksRefetch} = useGetTasks(); 
+const {data : notesData, isLoading : notesLoading, error : notesError,refetch : notesRefetch} = useGetNotes(); 
+ const {updateTaskStatus , isPending : updateTaskStatusIsPending , error : updateTaskStatusError}  = useUpdateTaskStatus();
+const [tasks, setTasks] = useState<Task[]>([]);
+const [notes, setNotes] = useState<Note[]>([]);
 useEffect(() => {
-  if(data){
-    setTasks(data);
+  if(tasksData){
+    setTasks(tasksData);
   }
-}, [data]);
-  const [notes] = useState<Note[]>([
-    { _id: '1', title: 'Note 1', lastEdited: 'Last edited 2 days ago' },
-    { _id: '2', title: 'Note 2', lastEdited: 'Last edited 3 days ago' },
-    { _id: '3', title: 'Note 3', lastEdited: 'Last edited 4 days ago' },
-  ]);
+}, [tasksData]);
+useEffect(() =>
+  {
+    if(notesData){
+      setNotes(notesData);
+    } 
+  } , [notesData]);
 
-  const toggleTask = (id: string | number) => {
-    setTasks(tasks.map(task => 
-      task._id === id ? { ...task, completed: !task.completed } : task
-    ));
+  const toggleTask = async (id: string | number , task: Task) => {
+     setTasks(tasks.map(task => task._id === id ? { ...task, status: task.status === 'completed' ? 'todo' : 'completed' } : task));
+ await updateTaskStatus({ status : task.status === 'completed' ? 'todo' : 'completed' , id : id as string });    
+    tasksRefetch();
   };
 useEffect(() => {
   if (!isAuthenticated && isInitialized && !authLoading) {
@@ -78,15 +76,19 @@ useEffect(() => {
               <p>No tasks found</p>
               ) : (
                 tasks.map((task:Task) => (
-             <TaskCard key={task._id} task={task} toggleTask={toggleTask} />
+             <TaskCard key={task._id} task={task} toggleTask={()=> toggleTask( task._id , task )} />
             )) 
           )}
             
             <h3 className="text-[#121a0f] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Notes</h3>
             
-            {notes.map((note:Note) => (
+            {notes.length === 0 ? ( 
+              <p>No notes found</p>
+              ) : (
+                notes.map((note:Note) => (
                  <NoteCard key={note._id} note={note} />
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

@@ -6,21 +6,26 @@ import { useAuth } from '@/providers/auth-provider';
 import NoteForm from '../components/NoteForm';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import NoteCard from '../components/NoteCard';
+import useGetNotes from '../hooks/api/note/useGetNotes';
+import useCreateNote from '../hooks/api/note/useCreateNote';
+import useDeleteNote from '../hooks/api/note/useDeleteNote';
+import { Note } from '../../../types';
 
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  createdAt: Date;
-}
 
 export default function NotesPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: isAuthLoading, isInitialized } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const {data,error,isLoading : getNotesIsLoading ,refetch} = useGetNotes();
+  const {createNote,error : createNoteError,isPending : createNoteIsPending} = useCreateNote(); 
+  const {deleteNote,error : deleteNoteError,isPending : deleteNoteIsPending} = useDeleteNote(); 
 
+  useEffect(() => {
+    if (data) {
+      setNotes(data);
+    }
+  }, [data]);
   useEffect(() => {
     if (isInitialized && !isAuthLoading && !isAuthenticated) {
       router.push('/login');
@@ -40,17 +45,16 @@ export default function NotesPage() {
     return null;
   }
 
-  const handleAddNote = (newNote: Omit<Note, 'id' | 'createdAt'>) => {
-    const note: Note = {
-      ...newNote,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-    };
-    setNotes([...notes, note]);
+  const handleAddNote = (newNote: Note) => {
+    setNotes([...notes, newNote]);
+    createNote(newNote);
+    refetch();
   };
 
-  const deleteNote = (noteId: string) => {
-    setNotes(notes.filter(note => note.id !== noteId));
+  const deleteNoteHandler = (noteId: string) => {
+    setNotes(notes.filter(note => note._id !== noteId));
+    deleteNote(noteId);
+    refetch();
   };
 
   const categories = ['all', ...new Set(notes.map(note => note.category).filter(Boolean))];

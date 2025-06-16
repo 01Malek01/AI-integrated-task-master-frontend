@@ -1,14 +1,14 @@
 import axiosInstance from "@/app/lib/axios";
 import { useQuery } from "@tanstack/react-query";
-import { NotesResponse } from "../../../../../types";
+import { Note } from "../../../../../types";
 
 const useGetNotes = () => {
-    const getNotesReq = async (): Promise<NotesResponse> => {
+    const getNotesReq = async (): Promise<Note[]> => {
         const res = await axiosInstance.get('/notes');
         return res.data;
     };
 
-    const { data, isLoading, error, refetch } = useQuery<NotesResponse, Error>({
+    const { data, isLoading, error, refetch } = useQuery<Note[], Error>({
         queryKey: ['getNotes'],
         queryFn: getNotesReq,
     });

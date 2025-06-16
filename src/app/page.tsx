@@ -23,7 +23,7 @@ export default function page() {
     }
      if (isAuthenticated) {
       return (
-        <Home />  
+        <Home />
       )
     }
 }

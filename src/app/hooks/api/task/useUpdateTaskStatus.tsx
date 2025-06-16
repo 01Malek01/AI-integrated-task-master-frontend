@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
         status: string;
         id: string; 
     }) => {
-        const res = await axiosInstance.put(`/tasks/${id}/status`, {
+        const res = await axiosInstance.patch(`/tasks/${id}/status`, {
             status     
         }
          )
