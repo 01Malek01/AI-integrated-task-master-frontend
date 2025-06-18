@@ -26,8 +26,8 @@ export default function  ClientLayout({
           <main className='h-full pt-16'>
             {children}
           </main>
-          <footer>
-            <p>© 2025 Tasks Master. All rights reserved.</p>
+          <footer className='fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 mx-auto text-center mt-10 '>
+            <p>Made with ❤️ by <a href="https://github.com/01Malek01" target="_blank" rel="noopener noreferrer">Malek Mostafa</a></p>
           </footer>
           </AuthProvider>
         </QueryProvider>

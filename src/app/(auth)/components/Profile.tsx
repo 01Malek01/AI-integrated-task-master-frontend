@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/providers/auth-provider';
 import { useRouter } from 'next/navigation';
+import { useCompletedTasksCount } from '@/app/hooks/api/task/useCompletedTasksCount';
+import { useNotesCount } from '@/app/hooks/api/note/useNotesCount';
 
 const ProfilePage = () => {
     const { user, logout } = useAuth();
     const router = useRouter();
-
+ const { data: completedTasksCount } = useCompletedTasksCount(); 
+ const { data: notesCount } = useNotesCount();
+ useEffect(() => {
+   console.log( completedTasksCount, notesCount)
+ }, [completedTasksCount, notesCount]);
     const handleLogout = async () => {
         try {
             await logout();
@@ -73,11 +79,11 @@ const ProfilePage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
               <div className="flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)]">
                 <p className="text-[var(--color-text-light)] text-base font-medium leading-normal">Tasks Completed</p>
-                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{user?.tasks && user.tasks.length || 0}</p>
+                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{completedTasksCount?.count || 0}</p>
               </div>
               <div className="flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)]">
                 <p className="text-[var(--color-text-light)] text-base font-medium leading-normal">Notes Created</p>
-                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{user?.notes && user.notes.length || 0}</p>
+                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{notesCount?.count || 0}</p>
               </div>
             </div>
 

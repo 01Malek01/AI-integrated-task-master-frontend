@@ -6,6 +6,8 @@ export interface Task {
   priority: 'low' | 'medium' | 'high';
   status: 'todo' | 'in-progress' | 'completed';
   category?: string;
+  parentId?: string;
+  subTasks?: Task[]; // Note: Matches backend field name (capital 'S')
   createdAt: string;
   updatedAt: string;
   user: string;
@@ -21,8 +23,9 @@ export interface CreateTaskInput {
 }
 
 export interface UpdateTaskStatusInput {
-  taskId: string;
-  status: ' todo' | 'in-progress' | 'completed';
+  id: string;
+  subtaskId?: string;
+  status: 'todo' | 'in-progress' | 'completed';
 }
 
 export interface TaskResponse {

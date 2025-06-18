@@ -16,10 +16,10 @@ const Landing: React.FC = () => {
                 >
                   <div className="flex flex-col gap-2 text-center">
                     <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
-                      Organize Your Life with TaskMaster
+                      AI-Powered Task Management
                     </h1>
                     <h2 className="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
-                      TaskMaster is your all-in-one solution for managing notes and tasks efficiently. Boost your productivity with our AI-powered features.
+                      Streamline your workflow with intelligent task management. Our AI helps you prioritize, organize, and complete tasks more efficiently than ever before.
                     </h2>
                   </div>
                   <button
@@ -36,7 +36,7 @@ const Landing: React.FC = () => {
                   Key Features
                 </h1>
                 <p className="text-[#121810] text-base font-normal leading-normal max-w-[720px]">
-                  TaskMaster offers a range of features designed to enhance your productivity and organization.
+                  Our platform combines powerful task management with AI assistance to help you stay organized and productive.
                 </p>
               </div>
               <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-0">
@@ -49,7 +49,7 @@ const Landing: React.FC = () => {
                   <div className="flex flex-col gap-1">
                     <h2 className="text-[#121810] text-base font-bold leading-tight">Smart Task Prioritization</h2>
                     <p className="text-[#668a5c] text-sm font-normal leading-normal">
-                      Our AI algorithms prioritize your tasks based on urgency and importance, ensuring you focus on what matters most.
+                      Let AI analyze your tasks and automatically sort them by priority, so you always know what to work on next.
                     </p>
                   </div>
                 </div>
@@ -60,9 +60,9 @@ const Landing: React.FC = () => {
                     </svg>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h2 className="text-[#121810] text-base font-bold leading-tight">Intelligent Note Organization</h2>
+                    <h2 className="text-[#121810] text-base font-bold leading-tight">Real-time Collaboration</h2>
                     <p className="text-[#668a5c] text-sm font-normal leading-normal">
-                        TaskMaster intelligently categorizes and organizes your notes, making it easy to find what you need, when you need it.
+                        Work seamlessly with your team. Share tasks, track progress, and communicate in real-time, all in one place.
                     </p>
                   </div>
                 </div>
@@ -73,8 +73,8 @@ const Landing: React.FC = () => {
                     </svg>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h2 className="text-[#121810] text-base font-bold leading-tight">Seamless Collaboration</h2>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Collaborate with team members or friends in real-time, sharing notes and tasks effortlessly.</p>
+                    <h2 className="text-[#121810] text-base font-bold leading-tight">Smart Insights</h2>
+                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Get valuable insights into your productivity patterns and receive personalized recommendations to improve your workflow.</p>
                   </div>
                 </div>
               </div>
@@ -82,9 +82,9 @@ const Landing: React.FC = () => {
             <div className="flex flex-col gap-10 px-4 py-10 @container">
               <div className="flex flex-col gap-4">
                 <h1 className="text-[#121810] tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">
-                  AI-Powered Productivity
+                  AI-Enhanced Productivity
                 </h1>
-                <p className="text-[#121810] text-base font-normal leading-normal max-w-[720px]">Leverage the power of AI to take your productivity to the next level.</p>
+                <p className="text-[#121810] text-base font-normal leading-normal max-w-[720px]">Our AI works in the background to help you work smarter, not harder.</p>
               </div>
               <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3">
                 <div className="flex flex-col gap-3 pb-3">
@@ -93,8 +93,8 @@ const Landing: React.FC = () => {
                     style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBiA3ue2IhGohoMidW67-oYn6BBr8wrIDNkopermdi-YHWFm6KkxMehgUQG22r2x_-lpeNVjQxgJWQmye_1c4FZnO5Ow0Ot5GBWk8OrgZ_oE5W-dMiNGt9VlnLolnxqVSeug3hDYBLY9Br7EI0g3bR6n3Gv4NbACabtXMLZ8PbvMVrkGk787MgTScCSLfazs6mAO8cVKzHOrqflwzkYl1NS3VusWqRRe-XKNAjdQCi1Mt8yOwTVbEv44cQZpIAI_Xd9b__M1b2JVFY")' }}
                   ></div>
                   <div>
-                    <p className="text-[#121810] text-base font-medium leading-normal">AI Task Suggestions</p>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Get AI-powered suggestions for new tasks based on your notes and schedule.</p>
+                    <p className="text-[#121810] text-base font-medium leading-normal">Automated Task Scheduling</p>
+                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Our AI analyzes your workload and suggests the optimal time to tackle each task.</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-3 pb-3">
@@ -103,8 +103,8 @@ const Landing: React.FC = () => {
                     style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAR7_az4aanMUdW9dvebFrlIo5MyvODGzAH8IYz4EW5kFxVtKVx1Bv4p9RtfcumvfIyPhVLHLV6axZYnu6sZKD2R2m6lFrqUhE7HFIDvB-ysDNySBF54iR5h4qPD0Jl7UpQYJOBDi0noB1RpXfrDW4Tr1GwwFvy0Ud8fkiOSINcYT9BrzGPf1nl9pTQNi7OoS57J0X6HP8lyAgembiYAqOJGzrmjuKt70P6QkTsZSoH0usJv7OaNjKPCdPt3OclYAOeRcQlGPX5Ifk")' }}
                   ></div>
                   <div>
-                    <p className="text-[#121810] text-base font-medium leading-normal">Smart Scheduling</p>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Our AI helps you schedule tasks efficiently, optimizing your time and resources.</p>
+                    <p className="text-[#121810] text-base font-medium leading-normal">Predictive Task Analysis</p>
+                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Anticipate potential roadblocks before they happen with our predictive analytics.</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-3 pb-3">
@@ -113,8 +113,8 @@ const Landing: React.FC = () => {
                     style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBaztn6dsyj2Bc5Y7k9qwZrTDzKYa5ycseMwaOdYJ8iKdHRq0MCm75dQQmnUbbeIYr06BelBE7BwaRoAckgAZsqM0c4cwLNKldbNmYGuBFvjCzkRjAUBpCtDMVAY8Pv6q4uLeotcQDHrPRBZ-eDTAgbztvWVsx_q8UPR2IbesG1OL-waDMmV_eY67ok9dY91i-lyDPKUVAEOeZ022dHltPDQ-52lfhZ-s3lJzhfWF849TeLEOXflknZehCtqWewEOvkFQtcCVGiNZE")' }}
                   ></div>
                   <div>
-                    <p className="text-[#121810] text-base font-medium leading-normal">Intelligent Note Summaries</p>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Automatically summarize long notes and articles, saving you time and effort.</p>
+                    <p className="text-[#121810] text-base font-medium leading-normal">Smart Notifications</p>
+                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Receive intelligent reminders and alerts to keep you on track without being overwhelmed.</p>
                   </div>
                 </div>
               </div>
@@ -140,7 +140,7 @@ const Landing: React.FC = () => {
                   ))}
                 </div>
                 <p className="text-[#121810] text-base font-normal leading-normal">
-                  NoteWise has completely transformed the way I manage my projects. The AI-powered task prioritization is a game-changer!
+                  This task management system has completely transformed how our team operates. The AI insights have helped us increase productivity by 40%!
                 </p>
                 <div className="flex gap-9 text-[#668a5c]">
                   <button className="flex items-center gap-2">

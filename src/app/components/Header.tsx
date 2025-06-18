@@ -4,7 +4,6 @@ import { Bell, LogIn, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/auth-provider';
-const userAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAI6kzXTdfmHxMRKGx5RrpRjelxd8mXLvDbSqOFHNyLrHAHGUvP-yhoDpLw_-VADF9aFIF0hoXAA39FolCBGIlDUqqm6KqhAMEPHAISvtjaDBxA7ri6O7D2Iw-ZB2T-QuIVb1b9k1R3AFFqpDyXwFaLiGUPKTAz2A2sKfPlM8zvMbv5tz5dwhcP3bMQJQY8SLfnRsbxlEyFG-9zwpqkrbFzcltUafVs9pPKy10_eolc7oDGYcs4LMsEHu7VKJBMCxHCMIETUq1Uxkc';
 
 export default function Header() {
   const { isAuthenticated, user, logout } = useAuth();

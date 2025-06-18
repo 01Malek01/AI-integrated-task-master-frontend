@@ -76,7 +76,7 @@ useEffect(() => {
               <p>No tasks found</p>
               ) : (
                 tasks.map((task:Task) => (
-             <TaskCard key={task._id} task={task} toggleTask={()=> toggleTask( task._id , task )} />
+             <TaskCard setTasks={setTasks} refetch={tasksRefetch} onToggleTask={()=> toggleTask( task._id , task )} key={task._id} task={task} />
             )) 
           )}
             
