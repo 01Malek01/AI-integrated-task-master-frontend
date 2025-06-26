@@ -15,7 +15,6 @@ const useUpdateNote = () => {
         mutationFn: updateNoteReq,
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['getNotes'] });
-            queryClient.invalidateQueries({ queryKey: ['getNote', data.data._id] });
         },
     });
 

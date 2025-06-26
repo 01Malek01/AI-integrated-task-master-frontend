@@ -1,17 +1,4 @@
-export interface Task {
-  _id: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  priority: 'low' | 'medium' | 'high';
-  status: 'todo' | 'in-progress' | 'completed';
-  category?: string;
-  parentId?: string;
-  subTasks?: Task[]; // Note: Matches backend field name (capital 'S')
-  createdAt: string;
-  updatedAt: string;
-  user: string;
-}
+import { Task } from "../../types";
 
 export interface CreateTaskInput {
   title: string;

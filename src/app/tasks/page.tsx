@@ -101,13 +101,14 @@ export default function TasksPage() {
           ) : (
             <div className="space-y-3">
               {tasks.map((task: Task) => (
+                <div key={task._id} >
                 <TaskCard 
-                  key={task._id}
                   task={task}
                   setTasks={setTasks}
                   refetch={refetch}
                   isUpdating={isUpdatePending}
-                />
+                  />
+                  </div>
               ))}
             </div>
           )}

@@ -8,6 +8,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import useUpdateTaskStatus from '../hooks/api/task/useUpdateTaskStatus';
 import useUpdateSubtaskStatus from '../hooks/api/task/useUpdateSubtaskStatus';
+import TaskDetail from './TaskDetail';
 
 // Base props for TaskCard and SubTaskCard
 interface TaskCardBaseProps {
@@ -42,7 +43,6 @@ const SubTaskCard: React.FC<SubTaskCardProps> = ({
 }) => {
   // Hook to update subtask status via API
   const { updateSubtaskStatus, isPending: isUpdatingSubtaskStatus } = useUpdateSubtaskStatus();
-  
   /**
    * Handles the change in subtask status.
    * Updates the backend via API and then optimistically updates the local state.
@@ -153,14 +153,27 @@ const TaskCard: React.FC<TaskCardProps> = ({
   const { generateSubtasks, isPending, error } = useGenerateSubtasks();
   const [isGenerating, setIsGenerating] = useState(false); // Local state for AI generation loading
   const [showSubtasks, setShowSubtasks] = useState(false); // State to toggle subtask visibility
+  const [openTaskModal , setOpenTaskModal] = useState<boolean>(false);
+
   // Hook to update main task status via API
   const { updateTaskStatus, isPending: isUpdatingStatus } = useUpdateTaskStatus();
   
+/**
+ * Handles the task modal open
+ * @param task the task to show details of
+ * 
+ */
+
+
   /**
    * Handles the change in main task status.
    * Updates the backend via API and then optimistically updates the local state.
    * @param newStatus The new status for the main task.
    */
+  const handleOpenTaskModal = (task:Task) => {
+    setOpenTaskModal(true);
+
+  }
   const handleTaskStatusChange = async (newStatus: 'todo' | 'in-progress' | 'completed') => {
     try {
       // Call the API to update the task status
@@ -235,30 +248,24 @@ const TaskCard: React.FC<TaskCardProps> = ({
     );
   };
 
-  /**
-   * Toggles the visibility of subtasks, preventing click through to specific elements.
-   * @param e The mouse event.
-   */
-  const toggleSubtasks = (e: React.MouseEvent) => {
-    // Prevent toggle when clicking on status dropdown or AI button
-    const target = e.target as HTMLElement;
-    if (
-      target.tagName === 'SELECT' || 
-      target.closest('button')?.ariaLabel === 'Generate subtasks with AI'
-    ) {
-      return;
-    }
-    setShowSubtasks(!showSubtasks);
-  };
+
 
   return (
-    <div className="w-full space-y-2">
+    <>
+    <AnimatePresence >
+{
+  openTaskModal && (
+    <TaskDetail setTasks={setTasks} task={task} onClose={()=> setOpenTaskModal(false)}/>
+  )
+}
+    </AnimatePresence>
+    <div className="w-full space-y-2 cursor-pointer">
       <motion.div 
+      onClick={()=> setOpenTaskModal(true)}
         whileTap={{ scale: 0.98 }}
         className={`flex items-center gap-3 bg-green-50 px-3 py-2 md:px-4 min-h-[64px] md:min-h-[72px] justify-between hover:bg-green-100/50 transition-colors rounded-lg ${
           level === 0 ? 'shadow-sm' : ''
-        } ${hasSubtasks ? 'cursor-pointer' : ''}`}
-        onClick={hasSubtasks ? toggleSubtasks : undefined} // Only toggle if there are subtasks
+        }`}
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <div className="text-green-600 flex items-center justify-center rounded-lg bg-green-100 shrink-0 size-10 md:size-12">
@@ -288,7 +295,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             {task.dueDate && (
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-xs md:text-sm text-green-600 font-medium">
-                  Due {formatNoteDate(task.dueDate)}
+                  Due {formatNoteDate(task?.dueDate) || 'N/A'} 
                 </span>
                 {task.priority && (
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
@@ -342,17 +349,22 @@ const TaskCard: React.FC<TaskCardProps> = ({
           </button>
           {/* Toggle Subtasks button/icon */}
           {hasSubtasks && (
-            <motion.div
-              animate={{ rotate: showSubtasks ? 180 : 0 }}
+            <motion.button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowSubtasks(!showSubtasks);
+              }}
+              animate={{ rotate: showSubtasks ? 360 : 0 }}
               transition={{ duration: 0.2 }}
-              className="text-gray-500 ml-1"
+              className="text-gray-500 ml-1 hover:bg-green-300 rounded-full p-1 cursor-pointer bg-green-400"
+              aria-label={showSubtasks ? "Collapse subtasks" : "Expand subtasks"}
             >
               {showSubtasks ? (
                 <ChevronUp className="w-4 h-4 md:w-5 md:h-5" />
               ) : (
                 <ChevronDown className="w-4 h-4 md:w-5 md:h-5" />
               )}
-            </motion.div>
+            </motion.button>
           )}
         </div>
       </motion.div>
@@ -381,6 +393,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
         )}
       </AnimatePresence>
     </div>
+          </>
   );
 };
 

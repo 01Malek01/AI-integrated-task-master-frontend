@@ -76,7 +76,7 @@ useEffect(() => {
               <p>No tasks found</p>
               ) : (
                 tasks.map((task:Task) => (
-             <TaskCard setTasks={setTasks} refetch={tasksRefetch} onToggleTask={()=> toggleTask( task._id , task )} key={task._id} task={task} />
+             <TaskCard setTasks={setTasks} refetch={tasksRefetch} key={task._id} task={task} />
             )) 
           )}
             
@@ -86,7 +86,7 @@ useEffect(() => {
               <p>No notes found</p>
               ) : (
                 notes.map((note:Note) => (
-                 <NoteCard key={note._id} note={note} />
+                 <NoteCard key={note._id} note={note} setNotes={setNotes} />
               ))
             )}
           </div>

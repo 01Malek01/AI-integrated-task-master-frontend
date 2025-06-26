@@ -4,14 +4,15 @@ import { useMutation } from "@tanstack/react-query";
  
 
  const useUpdateTask = () => {
-    const updateTaskReq =  async ({title , dueDate , description , priority , status , category , id }: {
-        title: string;
-        dueDate: string;
-        description: string;
-        priority: string;
-        status: string;
-        category: string;
+    const updateTaskReq =  async ({title , dueDate , description , priority , status , category , id,startDate }: {
+        title?: string;
+        dueDate?: string;
+        description?: string;
+        priority?: string;
+        status?: string;
+        category?: string;
         id: string;
+        startDate?: string;
     }) => {
         const res = await axiosInstance.put(`/tasks/${id}`, {
             title,
@@ -19,7 +20,8 @@ import { useMutation } from "@tanstack/react-query";
             description,
             priority,
             status,
-            category     
+            category,
+            startDate     
         }
          )
         return res.data

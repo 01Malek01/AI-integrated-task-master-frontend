@@ -5,7 +5,8 @@ import Header from './components/Header';
 import QueryProvider from '../providers/query-provider';
 import ToastProvider from '../providers/toast-provider';
 import AuthProvider from '@/providers/auth-provider';
-
+import {onCLS,onINP,onLCP} from "web-vitals"
+import { useEffect } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function  ClientLayout({
@@ -13,7 +14,11 @@ export default function  ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
- 
+//  useEffect(()=>{
+//   onCLS(console.log, { reportAllChanges: true } );  
+//   onINP(console.log, { reportAllChanges: true } );
+//   onLCP(console.log, { reportAllChanges: true } );
+//  },[])
   return (
     <html lang="en" className="h-full bg-gray-50">
       <body className={`${inter.className} h-full`}>

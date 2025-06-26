@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Note } from '../../../types';
 import { formatNoteDate } from '../../utils/dateUtils';
+import NoteDetail from './NoteDetail';
+import { AnimatePresence } from 'framer-motion';
 
-export default function NoteCard({ note }: { note: Note }) {
-  return (
-    <div key={note._id} className="flex items-center gap-4 bg-[#f9fbf9] px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f5ee] transition-colors cursor-pointer">
+export default function NoteCard({ note, setNotes }: { note: Note , setNotes : React.Dispatch<React.SetStateAction<Note[]>>}) {
+     const [openNoteModal , setOpenNoteModal] = useState<boolean>(false);
+      return (
+    <>
+     <AnimatePresence >
+{
+  openNoteModal && (
+    <NoteDetail setNotes={ setNotes} note={note} onClose={()=> setOpenNoteModal(false)}/>
+  )
+}
+    </AnimatePresence>
+    <div onClick={ ()=> setOpenNoteModal(true)} key={note._id} className="flex items-center gap-4 bg-[#f9fbf9] px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f5ee] transition-colors cursor-pointer">
       <div className="flex items-center gap-4 w-full">
         <div className="text-[#121a0f] flex items-center justify-center rounded-lg bg-[#ebf2e9] shrink-0 size-12">
           <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
@@ -37,5 +48,7 @@ export default function NoteCard({ note }: { note: Note }) {
         </div>
                 </div>
               </div>
+              </>
+
   )
 }

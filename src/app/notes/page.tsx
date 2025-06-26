@@ -114,7 +114,7 @@ export default function NotesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredNotes.map((note) => (
-               <NoteCard key={note._id} note={note} />
+               <NoteCard key={note._id} note={note} setNotes={setNotes} />
               ))}
             </div>
           )}

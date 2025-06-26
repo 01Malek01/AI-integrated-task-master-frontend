@@ -38,6 +38,7 @@ export interface Task {
     updatedAt: string;
     user: string;
     subTasks : SubTask[];
+    startDate:string
   }
   export interface SubTask {
     _id: string;
@@ -80,6 +81,7 @@ export interface Note {
     updatedAt?: string;
     user?: string;
     lastEdited?: string;
+
 }
 
 export interface CreateNoteInput {
