@@ -13,6 +13,16 @@ export interface AuthContextType {
     isAuthenticated: boolean;
     isAdmin: boolean;
     isLoading: boolean;
+    loginIsSuccess: boolean;
+}
+
+export interface Plan{
+      _id : string;
+      plan : string;
+      price : number;
+      priceId : string;
+      description : string;
+      duration : string;
 }
 
 export interface User {
@@ -23,6 +33,10 @@ export interface User {
     isAdmin?: boolean;
     createdAt: string;
     updatedAt?: string;
+    isSubscribed?: boolean;
+    subscriptionType?: string;
+    subscriptionId?: string;
+     subscriptionPrice?: number;
 }
 
 

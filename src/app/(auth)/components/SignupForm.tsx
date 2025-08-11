@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/auth-provider';
@@ -28,14 +28,17 @@ export default function SignupForm() {
     e.preventDefault();
     try {
       await register(formData);
-      toast.success('Account created successfully!');
-      // router.push('/dashboard'); // Redirect to dashboard after successful registration
     } catch (error) {
-      // Error message will be shown from the auth provider's error state
       console.error('Registration error:', error);
+      throw error;
     }
   };
-
+useEffect(() => {
+  if (registerError) {
+    console.log( 're error ',registerError)
+    toast.error(registerError.response?.data?.message || 'Registration failed. Please try again.');
+  } 
+}, [registerError]);
   return (
     <div className="w-full card p-8">
       <h2 className="text-[var(--color-text)] text-2xl font-bold text-center mb-8">
@@ -98,7 +101,7 @@ export default function SignupForm() {
           <button
             type="submit"
             disabled={registerIsPending}
-            className="flex w-full justify-center items-center space-x-2 rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed h-10"
+            className="cursor-pointer   flex w-full justify-center items-center space-x-2 rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed h-10"
           >
             {registerIsPending && <LoadingSpinner size={14} color="#ffffff" />}
             <span>{registerIsPending ? 'Creating account...' : 'Sign up'}</span>
@@ -107,7 +110,7 @@ export default function SignupForm() {
         
         {registerError && (
           <div className="text-sm text-red-600 mt-2">
-            {registerError.message || 'Registration failed. Please try again.'}
+            {registerError.response?.data?.message || 'Registration failed. Please try again.'}
           </div>
         )}
       </form>

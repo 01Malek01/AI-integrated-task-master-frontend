@@ -13,6 +13,7 @@ const useRegister = () => {
         return res.data
       } catch (err) {
          console.error(err)
+         throw err
       }
     }
 const { mutateAsync: register, isPending, error } = useMutation({

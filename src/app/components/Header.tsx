@@ -56,6 +56,7 @@ return (
               <NavLink href="/notes">Notes</NavLink>
               <NavLink href="/tasks">Tasks</NavLink>
               <NavLink href="/calendar">Calendar</NavLink>
+              <NavLink href="/subscription">Pricing</NavLink>
             </nav>
             
             <button 

@@ -11,7 +11,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: authData, isLoading, error: checkAuthError, isError } = useCheckAuth();
-    const { login: loginMutation, error: loginError, isPending: loginIsPending } = useLogin();
+    const { login: loginMutation, error: loginError, isPending: loginIsPending,isSuccess: loginIsSuccess } = useLogin();
     const { register: registerMutation, error: registerError, isPending: registerIsPending } = useRegister();
     const { logout: logoutMutation, error: logoutError, isPending: logoutIsPending } = useLogout();
     
@@ -80,6 +80,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loginIsPending,
         registerIsPending,
         logoutIsPending,
+        loginIsSuccess,
         loginError,
         registerError,
         logoutError,

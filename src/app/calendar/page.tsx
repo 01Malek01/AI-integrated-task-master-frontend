@@ -5,9 +5,9 @@ import useGetTasks from '../hooks/api/task/useGetTasks'
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Task } from '@/types/task';
 import useUpdateTask from '../hooks/api/task/useUpdateTask';
 import toast from 'react-hot-toast';
+import { Task } from '../../../types';
 export default function page() {
     const {data,error,isLoading,refetch} = useGetTasks()
     const { updateTask,  isPending:isUpdatePending, error: updateTaskError } = useUpdateTask()
@@ -32,9 +32,10 @@ export default function page() {
             dueDate: event.event.end || new Date().toISOString(),
             startDate : event.event.start || new Date().toISOString(),
         })
-      } catch (error) {
+        // Handle any errors that occur during task update
+      } catch (error:any) {
          console.log(error)
-         toast.error(error.message as string)
+         toast.error(error?.message || 'Failed to update task'  )
       } 
     }
   return (

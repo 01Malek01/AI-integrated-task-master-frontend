@@ -10,70 +10,53 @@ import useUpdateTaskStatus from '../hooks/api/task/useUpdateTaskStatus';
 import useUpdateSubtaskStatus from '../hooks/api/task/useUpdateSubtaskStatus';
 import TaskDetail from './TaskDetail';
 
-// Base props for TaskCard and SubTaskCard
 interface TaskCardBaseProps {
   task: Task;
-  isUpdating?: boolean; // Prop to indicate if a parent operation is ongoing (e.g., main task update)
-  level?: number; // Visual nesting level
+  isUpdating?: boolean;
+  level?: number;
 }
 
-// Props for the main TaskCard, including state setters
 interface TaskCardProps extends TaskCardBaseProps {
-  refetch: () => void; // Function to refetch data, useful after complex operations like subtask generation
-  setTasks: (tasks: Task[]) => void; // Function to update the parent's tasks state
+  refetch: () => void;
+  setTasks: (tasks: Task[]) => void;
 }
 
-// Props for the SubTaskCard
 interface SubTaskCardProps {
-  subtask: Task; // The specific subtask object
-  task: Task; // The parent task object (needed to identify which task's subtask is being updated)
-  isUpdating: boolean; // Prop to indicate if a parent operation is ongoing
-  setTasks: (tasks: Task[]) => void; // Function to update the parent's tasks state
+  subtask: Task;
+  task: Task;
+  isUpdating: boolean;
+  setTasks: (tasks: Task[]) => void;
 }
 
-/**
- * Renders an individual subtask card.
- * Handles updating the subtask's status and reflecting it in the UI.
- */
 const SubTaskCard: React.FC<SubTaskCardProps> = ({ 
   subtask,
   task,
   isUpdating, 
-  setTasks // Pass setTasks to update parent state
+  setTasks
 }) => {
-  // Hook to update subtask status via API
   const { updateSubtaskStatus, isPending: isUpdatingSubtaskStatus } = useUpdateSubtaskStatus();
-  /**
-   * Handles the change in subtask status.
-   * Updates the backend via API and then optimistically updates the local state.
-   * @param newStatus The new status for the subtask.
-   */
+
   const handleSubtaskStatusChange = async (newStatus: 'todo' | 'in-progress' | 'completed') => {
     try {
-      // Call the API to update the subtask status
       await updateSubtaskStatus({ 
-        id: task._id, // Parent task ID
-        subtaskId: subtask._id, // Subtask ID
+        id: task._id,
+        subtaskId: subtask._id,
         status: newStatus 
       });
-
-      // Optimistically update the local state to reflect the status change immediately
       setTasks((prevTasks: Task[]) => {
         return prevTasks.map(t =>
-          t._id === task._id // Find the parent task
+          t._id === task._id
             ? {
                 ...t,
                 subTasks: t.subTasks?.map(st =>
-                  st._id === subtask._id ? { ...st, status: newStatus } : st // Update the specific subtask
+                  st._id === subtask._id ? { ...st, status: newStatus } : st
                 )
               }
-            : t // Return other tasks unchanged
+            : t
         );
       });
-
     } catch (error) {
       console.error('Failed to update subtask status:', error);
-      // In a real app, you might want to revert the optimistic update or show a user error message
     }
   };
 
@@ -112,13 +95,12 @@ const SubTaskCard: React.FC<SubTaskCardProps> = ({
           </div>
         </div>
         <div className="shrink-0 ml-2">
-          {/* Dropdown to change subtask status */}
           <select
             aria-label={`Change status for subtask: ${subtask.title}`}
             title={`Change status for subtask: ${subtask.title}`}
             value={subtask.status}
             onChange={(e) => handleSubtaskStatusChange(e.target.value as 'todo' | 'in-progress' | 'completed')}
-            disabled={isUpdating || isUpdatingSubtaskStatus} // Disable if parent is updating or this subtask is
+            disabled={isUpdating || isUpdatingSubtaskStatus}  
             className={`rounded-lg border border-green-200 bg-white text-xs md:text-sm focus:ring-2 focus:ring-green-300 focus:border-green-400 focus:outline-none cursor-pointer px-2 py-1 ${
               (isUpdating || isUpdatingSubtaskStatus) ? 'opacity-50 cursor-not-allowed' : ''
             } ${
@@ -137,94 +119,64 @@ const SubTaskCard: React.FC<SubTaskCardProps> = ({
   );
 };
 
-/**
- * Renders an individual task card, which can also contain subtasks.
- * Handles updating the main task's status and generating subtasks via AI.
- */
 const TaskCard: React.FC<TaskCardProps> = ({ 
   task, 
   refetch, 
   isUpdating = false, 
   level = 0, 
-  setTasks // Receive setTasks to update parent state
+  setTasks  
 }) => {
   const hasSubtasks = task.subTasks && task.subTasks.length > 0;
-  // Hook for AI subtask generation
   const { generateSubtasks, isPending, error } = useGenerateSubtasks();
-  const [isGenerating, setIsGenerating] = useState(false); // Local state for AI generation loading
-  const [showSubtasks, setShowSubtasks] = useState(false); // State to toggle subtask visibility
+  const [isGenerating, setIsGenerating] = useState(false);  
+  const [showSubtasks, setShowSubtasks] = useState(false);  
   const [openTaskModal , setOpenTaskModal] = useState<boolean>(false);
 
-  // Hook to update main task status via API
   const { updateTaskStatus, isPending: isUpdatingStatus } = useUpdateTaskStatus();
   
-/**
- * Handles the task modal open
- * @param task the task to show details of
- * 
- */
-
-
-  /**
-   * Handles the change in main task status.
-   * Updates the backend via API and then optimistically updates the local state.
-   * @param newStatus The new status for the main task.
-   */
   const handleOpenTaskModal = (task:Task) => {
     setOpenTaskModal(true);
 
   }
   const handleTaskStatusChange = async (newStatus: 'todo' | 'in-progress' | 'completed') => {
     try {
-      // Call the API to update the task status
       await updateTaskStatus({ 
         id: task._id, 
         status: newStatus 
       });
 
-      // Optimistically update the local state to reflect the status change immediately
       setTasks((prevTasks: Task[]) => {
         return prevTasks.map(t =>
-          t._id === task._id ? { ...t, status: newStatus } : t // Update the specific task
+          t._id === task._id ? { ...t, status: newStatus } : t  
         );
       });
 
     } catch (error) {
       console.error('Failed to update task status:', error);
-      // In a real app, you might want to revert the optimistic update or show a user error message
     }
   }; 
   
-  /**
-   * Triggers AI subtask generation.
-   * Updates local state and then calls refetch to get the latest task data.
-   */
   const genSubtasks = async () => {
     try {
-      setIsGenerating(true); // Set loading state for generation
+      setIsGenerating(true);  
       const response = await generateSubtasks({ title: task.title, taskId: task._id });
       
-      // Update the tasks state with the new task data that includes generated subtasks
       setTasks((prevTasks: Task[]) => {
         return prevTasks.map(t => t._id === task._id ? response.task : t);
       });
       
-      // If refetch is provided, call it to ensure data consistency
       if (refetch && typeof refetch === 'function') {
         await refetch();
       }
       
-      setShowSubtasks(true); // Automatically show subtasks after generation
+      setShowSubtasks(true);  
     } catch (error) {
       console.error('Error generating subtasks:', error);
     } finally {
-      setIsGenerating(false); // Reset loading state
+      setIsGenerating(false);  
     }
   };
 
-  /**
-   * Renders skeleton placeholders while subtasks are being generated.
-   */
   const renderSkeletonSubtasks = () => {
     return (
       <motion.div 
@@ -248,8 +200,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
     );
   };
 
-
-
   return (
     <>
     <AnimatePresence >
@@ -269,7 +219,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <div className="text-green-600 flex items-center justify-center rounded-lg bg-green-100 shrink-0 size-10 md:size-12">
-            {/* Task icon */}
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
               width="20px" 
@@ -313,12 +262,11 @@ const TaskCard: React.FC<TaskCardProps> = ({
           </div>
         </div>
         <div className="shrink-0 flex items-center gap-2">
-          {/* Dropdown to change main task status */}
           <select
             aria-label={`Change status for task: ${task.title}`}
             value={task.status}
             onChange={(e) => handleTaskStatusChange(e.target.value as 'todo' | 'in-progress' | 'completed')}
-            disabled={isUpdating || isUpdatingStatus} // Disable if parent is updating or this task is
+            disabled={isUpdating || isUpdatingStatus}  
             className={`rounded-lg border border-green-200 bg-white text-xs md:text-sm focus:ring-2 focus:ring-green-300 focus:border-green-400 focus:outline-none cursor-pointer px-2 py-1 ${
               (isUpdating || isUpdatingStatus) ? 'opacity-50 cursor-not-allowed' : ''
             } ${
@@ -326,16 +274,15 @@ const TaskCard: React.FC<TaskCardProps> = ({
               task.status === 'in-progress' ? 'bg-blue-50 text-blue-700' : 
               'bg-gray-50 text-gray-700'
             }`}
-            onClick={(e) => e.stopPropagation()} // Prevent toggling subtasks when clicking dropdown
+            onClick={(e) => e.stopPropagation()}  
           >
             <option value="todo">To Do</option>
             <option value="in-progress">In Progress</option>
             <option value="completed">Completed</option>
           </select>
-          {/* AI Subtask Generation Button */}
           <button
             onClick={(e) => {
-              e.stopPropagation(); // Prevent toggling subtasks when clicking button
+              e.stopPropagation();  
               genSubtasks();
             }}
             disabled={isGenerating}
@@ -347,7 +294,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
           >
             <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
           </button>
-          {/* Toggle Subtasks button/icon */}
           {hasSubtasks && (
             <motion.button
               onClick={(e) => {
@@ -369,10 +315,10 @@ const TaskCard: React.FC<TaskCardProps> = ({
         </div>
       </motion.div>
       
-      {/* Subtasks section with animations */}
+      {/* { Subtasks section with animations } */}
       <AnimatePresence>
-        {isGenerating && renderSkeletonSubtasks()} {/* Show skeletons while generating */}
-        {showSubtasks && hasSubtasks && !isGenerating && ( // Show subtasks if toggled, exist, and not generating
+        {isGenerating && renderSkeletonSubtasks()} 
+        {showSubtasks && hasSubtasks && !isGenerating && (  
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -386,7 +332,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 subtask={subtask}
                 task={task}
                 isUpdating={isUpdating}
-                setTasks={setTasks} // Pass setTasks down to subtask card
+                setTasks={setTasks}  
               />
             ))}
           </motion.div>

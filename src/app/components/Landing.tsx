@@ -1,242 +1,803 @@
 import React from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { Brain, Users, BarChart3, Zap, Clock, Target, Star, ThumbsUp, ThumbsDown, Crown, Rocket, Check } from 'lucide-react';
+import Link from 'next/link';
 
-const Landing: React.FC = () => {
+const App: React.FC = () => {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }
+    },
+    hover: {
+      scale: 1.05,
+      rotateY: 5,
+      z: 50,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+      }
+    }
+  };
+
+  const floatingVariants = {
+    animate: {
+      y: [-10, 10, -10],
+      rotate: [-2, 2, -2],
+      transition: {
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  // Pricing Plans Data
+  const plans = [
+    {
+      name: "Starter",
+      price: "Free",
+      description: "Perfect for individuals getting started",
+      icon: <Zap className="w-6 h-6" />,
+      gradient: "from-slate-600 to-slate-700",
+      borderGradient: "from-slate-500/50 to-slate-600/50",
+      popular: false,
+      features: [
+        "Basic task management",
+        "Notes and reminders",
+      ]
+    },
+    {
+      name: "Professional",
+      price: "$10",
+      description: "Ideal for professionals",
+      icon: <Crown className="w-6 h-6" />,
+      gradient: "from-emerald-500 to-blue-600",
+      borderGradient: "from-emerald-400/50 to-blue-500/50",
+      popular: true,
+      features: [
+        "Advanced AI insights",
+        "Priority support",
+        "Advanced analytics",
+        "Custom workflows",
+        "AI suggestions and recommendations"
+      ]
+    },
+   
+  ];
+
+  const AnimatedSection = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
+    const ref = React.useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+    return (
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={containerVariants}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    );
+  };
+
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-[#f9fbf9] group/design-root overflow-x-hidden" style={{ fontFamily: 'Manrope, "Noto Sans", sans-serif' }}>
-      <div className="layout-container flex h-full grow flex-col">
-        <div className="px-40 flex flex-1 justify-center py-5">
-          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <div className="@container">
-              <div className="@[480px]:p-4">
-                <div
-                  className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4"
-                  style={{
-                    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuB-fCtrfRBh60ZnYTUpAxWwP_aEjhZ0AN7TIGoFMhi-zR0yEndTG1LuzkoJ0WJJLp0Yl3dOPFsiT_nOae8GCFkcxYFg5eWjakCVkTTQIAv3Lo8BzmtcskFVODPNS8p6c3mta77HPZdq8s6Y1HNT74qZfjqTTww-QdvVxVP49tO5MCGkOuGZYSIU3NLvNQT54ZChjgF6kHlFJFmglhYZCOsbH5W27QnM5Ex64UtmV9lx9lnG3OULZmtOM0dZ6d_Uc7bRaC6VMXtFsVc")'
-                  }}
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 overflow-x-hidden">
+      {/* Animated Background Elements */}
+      
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute top-3/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.6, 0.3, 0.6],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+        />
+        <motion.div 
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 4
+          }}
+        />
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-8 h-2 bg-white/20 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [-20, 20, -20],
+              x: [-10, 10, -10],
+              rotate: [0, 360, 0],
+              opacity: [0.2, 0.8, 0.2],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 5
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Hero Section */}
+      <motion.div 
+        className="relative min-h-screen flex items-center justify-center px-6 py-20"
+        style={{ y, opacity }}
+      >
+        <div className="max-w-6xl mx-auto text-center">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
+            <motion.div 
+              variants={itemVariants}
+              className="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 text-white/80 text-sm"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              >
+               <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6"
+                aria-hidden="true"
+              >
+                <path
+                  d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z"
+                  fill="currentColor"
+                />
+              </svg>
+                            </motion.div>
+              <span>AI-Powered Task Management</span>
+            </motion.div>
+            
+            <motion.h1 
+              variants={itemVariants}
+              className="text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-white via-purple-200 to-emerald-200 bg-clip-text text-transparent leading-tight tracking-tight"
+            >
+              Work  <span className="text-emerald-400">Smarter</span>
+              <br />
+              <motion.span 
+                className="text-5xl md:text-7xl bg-clip-text text-transparent"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              >
+                Not Harder
+              </motion.span>
+            </motion.h1>
+            
+            <motion.p 
+              variants={itemVariants}
+              className="text-xl md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed"
+            >
+              Streamline your workflow with intelligent task management. Our AI helps you prioritize, organize, and complete tasks more efficiently than ever before.
+            </motion.p>
+            
+            <motion.div 
+              variants={itemVariants}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+              <motion.button 
+                className="cursor-pointer group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full text-white font-semibold text-lg overflow-hidden"
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(16, 185, 129, 0.3)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <Link href="/register"> 
+                <motion.span 
+                  className="relative z-10"
+                  whileHover={{ y: -2 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <div className="flex flex-col gap-2 text-center">
-                    <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
-                      AI-Powered Task Management
-                    </h1>
-                    <h2 className="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
-                      Streamline your workflow with intelligent task management. Our AI helps you prioritize, organize, and complete tasks more efficiently than ever before.
-                    </h2>
-                  </div>
-                  <button
-                    className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#8cd279] text-[#121810] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]"
-                  >
-                    <span className="truncate">Get Started</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-10 px-4 py-10 @container">
-              <div className="flex flex-col gap-4">
-                <h1 className="text-[#121810] tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">
-                  Key Features
-                </h1>
-                <p className="text-[#121810] text-base font-normal leading-normal max-w-[720px]">
-                  Our platform combines powerful task management with AI assistance to help you stay organized and productive.
-                </p>
-              </div>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-0">
-                <div className="flex flex-1 gap-3 rounded-lg border border-[#d7e2d4] bg-[#f9fbf9] p-4 flex-col">
-                  <div className="text-[#121810]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                      <path d="M80,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm8,40h64a8,8,0,0,0,0,16H96a8,8,0,0,0,0,16Zm32,16H96a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16ZM44,52A12,12,0,1,0,56,64,12,12,0,0,0,44,52Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,116Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,180Z"></path>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-[#121810] text-base font-bold leading-tight">Smart Task Prioritization</h2>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">
-                      Let AI analyze your tasks and automatically sort them by priority, so you always know what to work on next.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-1 gap-3 rounded-lg border border-[#d7e2d4] bg-[#f9fbf9] p-4 flex-col">
-                  <div className="text-[#121810]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                      <path d="M88,96a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H96A8,8,0,0,1,88,96Zm8,40h64a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16Zm32,16H96a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16ZM224,48V156.69A15.86,15.86,0,0,1,219.31,168L168,219.31A15.86,15.86,0,0,1,156.69,224H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H152V160a8,8,0,0,1,8-8h48V48H48Zm120-40v28.7L196.69,168Z"></path>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-[#121810] text-base font-bold leading-tight">Real-time Collaboration</h2>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">
-                        Work seamlessly with your team. Share tasks, track progress, and communicate in real-time, all in one place.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-1 gap-3 rounded-lg border border-[#d7e2d4] bg-[#f9fbf9] p-4 flex-col">
-                  <div className="text-[#121810]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                      <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"></path>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-[#121810] text-base font-bold leading-tight">Smart Insights</h2>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Get valuable insights into your productivity patterns and receive personalized recommendations to improve your workflow.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-10 px-4 py-10 @container">
-              <div className="flex flex-col gap-4">
-                <h1 className="text-[#121810] tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">
-                  AI-Enhanced Productivity
-                </h1>
-                <p className="text-[#121810] text-base font-normal leading-normal max-w-[720px]">Our AI works in the background to help you work smarter, not harder.</p>
-              </div>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3">
-                <div className="flex flex-col gap-3 pb-3">
-                  <div
-                    className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                    style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBiA3ue2IhGohoMidW67-oYn6BBr8wrIDNkopermdi-YHWFm6KkxMehgUQG22r2x_-lpeNVjQxgJWQmye_1c4FZnO5Ow0Ot5GBWk8OrgZ_oE5W-dMiNGt9VlnLolnxqVSeug3hDYBLY9Br7EI0g3bR6n3Gv4NbACabtXMLZ8PbvMVrkGk787MgTScCSLfazs6mAO8cVKzHOrqflwzkYl1NS3VusWqRRe-XKNAjdQCi1Mt8yOwTVbEv44cQZpIAI_Xd9b__M1b2JVFY")' }}
-                  ></div>
-                  <div>
-                    <p className="text-[#121810] text-base font-medium leading-normal">Automated Task Scheduling</p>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Our AI analyzes your workload and suggests the optimal time to tackle each task.</p>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-3 pb-3">
-                  <div
-                    className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                    style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAR7_az4aanMUdW9dvebFrlIo5MyvODGzAH8IYz4EW5kFxVtKVx1Bv4p9RtfcumvfIyPhVLHLV6axZYnu6sZKD2R2m6lFrqUhE7HFIDvB-ysDNySBF54iR5h4qPD0Jl7UpQYJOBDi0noB1RpXfrDW4Tr1GwwFvy0Ud8fkiOSINcYT9BrzGPf1nl9pTQNi7OoS57J0X6HP8lyAgembiYAqOJGzrmjuKt70P6QkTsZSoH0usJv7OaNjKPCdPt3OclYAOeRcQlGPX5Ifk")' }}
-                  ></div>
-                  <div>
-                    <p className="text-[#121810] text-base font-medium leading-normal">Predictive Task Analysis</p>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Anticipate potential roadblocks before they happen with our predictive analytics.</p>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-3 pb-3">
-                  <div
-                    className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                    style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBaztn6dsyj2Bc5Y7k9qwZrTDzKYa5ycseMwaOdYJ8iKdHRq0MCm75dQQmnUbbeIYr06BelBE7BwaRoAckgAZsqM0c4cwLNKldbNmYGuBFvjCzkRjAUBpCtDMVAY8Pv6q4uLeotcQDHrPRBZ-eDTAgbztvWVsx_q8UPR2IbesG1OL-waDMmV_eY67ok9dY91i-lyDPKUVAEOeZ022dHltPDQ-52lfhZ-s3lJzhfWF849TeLEOXflknZehCtqWewEOvkFQtcCVGiNZE")' }}
-                  ></div>
-                  <div>
-                    <p className="text-[#121810] text-base font-medium leading-normal">Smart Notifications</p>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">Receive intelligent reminders and alerts to keep you on track without being overwhelmed.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <h2 className="text-[#121810] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">User Testimonials</h2>
-            <div className="flex flex-col gap-8 overflow-x-hidden bg-[#f9fbf9] p-4">
-              <div className="flex flex-col gap-3 bg-[#f9fbf9]">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-                    style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBNPaxZiDfJ8KwXhUfvxD80UMI01hzsE-JMR7Bzmeevbs2s36yWbYifFBDvuPwJE13Dh7t8oJ2uVqLTR8lSTYyLfkTAB41YxD1m4Sd-SPC3UDIdiShN1S03-zUZR9uWn1nY1SVHWEcgEcGTVt2nzvEmuFMLhkNpxGhPpe7FT0Vwql7a_JEJ_tYqGUJ7v6cEFXVgn-0qXec8v48SS78Jwgk7rpSzsaUG-nSxd_WElDXdahCLvveZ8atI_eIvlPLB2DgH5AwM2N6qJL4")' }}
-                  ></div>
-                  <div className="flex-1">
-                    <p className="text-[#121810] text-base font-medium leading-normal">Sophia Carter</p>
-                    <p className="text-[#668a5c] text-sm font-normal leading-normal">2023-09-15</p>
-                  </div>
-                </div>
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#8cd279" viewBox="0 0 256 256">
-                      <path d="M234.5,114.38l-45.1,39.36,13.51,58.6a16,16,0,0,1-23.84,17.34l-51.11-31-51,31a16,16,0,0,1-23.84-17.34L66.61,153.8,21.5,114.38a16,16,0,0,1,9.11-28.06l59.46-5.15,23.21-55.36a15.95,15.95,0,0,1,29.44,0h0L166,81.17l59.44,5.15a16,16,0,0,1,9.11,28.06Z"></path>
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-[#121810] text-base font-normal leading-normal">
-                  This task management system has completely transformed how our team operates. The AI insights have helped us increase productivity by 40%!
-                </p>
-                <div className="flex gap-9 text-[#668a5c]">
-                  <button className="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                      <path d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z"></path>
-                    </svg>
-                    <p>12</p>
-                  </button>
-                  <button className="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                      <path d="M239.82,157l-12-96A24,24,0,0,0,204,40H32A16,16,0,0,0,16,56v88a16,16,0,0,0,16,16H75.06l37.78,75.58A8,8,0,0,0,120,240a40,40,0,0,0,40-40V184h56a24,24,0,0,0,23.82-27ZM72,144H32V56H72Zm150,21.29a7.88,7.88,0,0,1-6,2.71H152a8,8,0,0,0-8,8v24a24,24,0,0,1-19.29,23.54L88,150.11V56H204a8,8,0,0,1,7.94,7l12,96A7.87,7.87,0,0,1,222,165.29Z"></path>
-                    </svg>
-                    <p>2</p>
-                  </button>
-                </div>
-              </div>
-              {/* Additional testimonials would go here */}
-            </div>
-            <h2 className="text-[#121810] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Pricing Plans</h2>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(228px,1fr))] gap-2.5 px-4 py-3 @3xl:grid-cols-4">
-              <div className="flex flex-1 flex-col gap-4 rounded-xl border border-solid border-[#d7e2d4] bg-[#f9fbf9] p-6">
-                <div className="flex flex-col gap-1">
-                  <h1 className="text-[#121810] text-base font-bold leading-tight">Basic</h1>
-                  <p className="flex items-baseline gap-1 text-[#121810]">
-                    <span className="text-[#121810] text-4xl font-black leading-tight tracking-[-0.033em]">Free</span>
-                    <span className="text-[#121810] text-base font-bold leading-tight">/month</span>
-                  </p>
-                </div>
-                <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#ebf1ea] text-[#121810] text-sm font-bold leading-normal tracking-[0.015em]">
-                  <span className="truncate">Get Started</span>
-                </button>
-                <div className="flex flex-col gap-2">
-                  {['Basic task management', 'Note-taking', 'Limited collaboration'].map((feature, i) => (
-                    <div key={i} className="text-[13px] font-normal leading-normal flex gap-3 text-[#121810]">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                      </svg>
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-1 flex-col gap-4 rounded-xl border border-solid border-[#d7e2d4] bg-[#f9fbf9] p-6">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between">
-                    <h1 className="text-[#121810] text-base font-bold leading-tight">Pro</h1>
-                    <p className="text-[#121810] text-xs font-medium leading-normal tracking-[0.015em] rounded-full bg-[#8cd279] px-3 py-[3px] text-center">Recommended</p>
-                  </div>
-                  <p className="flex items-baseline gap-1 text-[#121810]">
-                    <span className="text-[#121810] text-4xl font-black leading-tight tracking-[-0.033em]">$9.99</span>
-                    <span className="text-[#121810] text-base font-bold leading-tight">/month</span>
-                  </p>
-                </div>
-                <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#ebf1ea] text-[#121810] text-sm font-bold leading-normal tracking-[0.015em]">
-                  <span className="truncate">Upgrade</span>
-                </button>
-                <div className="flex flex-col gap-2">
-                  {['Advanced task prioritization', 'Intelligent note organization', 'Unlimited collaboration', 'AI-powered suggestions'].map((feature, i) => (
-                    <div key={i} className="text-[13px] font-normal leading-normal flex gap-3 text-[#121810]">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                      </svg>
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-1 flex-col gap-4 rounded-xl border border-solid border-[#d7e2d4] bg-[#f9fbf9] p-6">
-                <div className="flex flex-col gap-1">
-                  <h1 className="text-[#121810] text-base font-bold leading-tight">Team</h1>
-                  <p className="flex items-baseline gap-1 text-[#121810]">
-                    <span className="text-[#121810] text-4xl font-black leading-tight tracking-[-0.033em]">$19.99</span>
-                    <span className="text-[#121810] text-base font-bold leading-tight">/month</span>
-                  </p>
-                </div>
-                <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#ebf1ea] text-[#121810] text-sm font-bold leading-normal tracking-[0.015em]">
-                  <span className="truncate">Contact Us</span>
-                </button>
-                <div className="flex flex-col gap-2">
-                  {['All Pro features', 'Team management tools', 'Dedicated support'].map((feature, i) => (
-                    <div key={i} className="text-[13px] font-normal leading-normal flex gap-3 text-[#121810]">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                      </svg>
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+                  Get Started Free
+                </motion.span>
+                </Link>
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-blue-700"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ originX: 0 }}
+                />
+              </motion.button>
+              
+              <motion.button 
+                className="cursor-pointer   px-8 py-4 border-2 border-white/30 rounded-full text-white font-semibold text-lg backdrop-blur-sm"
+                whileHover={{ 
+                  scale: 1.05,
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  borderColor: "rgba(255, 255, 255, 0.5)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                Watch Demo
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        </div>
+
+    
+      </motion.div>
+
+      {/* Features Section */}
+      <AnimatedSection className="relative py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <motion.h2 
+              variants={itemVariants}
+              className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent"
+            >
+              Powerful Features
+            </motion.h2>
+            <motion.p 
+              variants={itemVariants}
+              className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed"
+            >
+              Our platform combines powerful task management with AI assistance to help you stay organized and productive.
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Target className="w-8 h-8" />,
+                title: "Smart Task Prioritization",
+                description: "Let AI analyze your tasks and automatically sort them by priority, so you always know what to work on next.",
+                gradient: "from-emerald-500 to-teal-600",
+              },
+              {
+                icon: <Users className="w-8 h-8" />,
+                title: "AI suggestions and  recommendations",
+                description: " AI can help you make better decisions by providing insights and recommendations based on your data.",
+                gradient: "from-emerald-500 to-green-600",
+              },
+              {
+                icon: <BarChart3 className="w-8 h-8" />,
+                title: "Smart Insights",
+                description: "Get valuable insights into your productivity patterns and receive personalized recommendations to improve your workflow.",
+                gradient: "from-emerald-500 to-cyan-800",
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                whileHover="hover"
+                className="group relative bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 cursor-pointer"
+                style={{ perspective: "1000px" }}
+              >
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  whileHover={{ opacity: 1 }}
+                />
+                
+                <motion.div 
+                  className={`w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl flex items-center justify-center mb-6 text-white`}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    rotate: 3,
+                    boxShadow: "0 10px 30px rgba(16, 185, 129, 0.3)"
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  {feature.icon}
+                </motion.div>
+                
+                <motion.h3 
+                  className="text-2xl font-bold text-white mb-4 group-hover:text-emerald-300 transition-colors duration-300"
+                  whileHover={{ x: 5 }}
+                >
+                  {feature.title}
+                </motion.h3>
+                
+                <motion.p 
+                  className="text-white/70 leading-relaxed"
+                  whileHover={{ x: 5 }}
+                >
+                  {feature.description}
+                </motion.p>
+
+                <motion.div 
+                  className="absolute top-4 right-4 w-2 h-2 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100"
+                  animate={{ scale: [1, 1.5, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </motion.div>
+            ))}
           </div>
         </div>
-     
-      </div>
+      </AnimatedSection>
+
+      {/* AI Enhanced Section */}
+      <AnimatedSection className="relative py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <motion.h2 
+              variants={itemVariants}
+              className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent"
+            >
+              AI-Enhanced Productivity
+            </motion.h2>
+            <motion.p 
+              variants={itemVariants}
+              className="text-xl text-white/70 max-w-3xl mx-auto"
+            >
+              Our AI works in the background to help you work smarter, not harder.
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Automated Task Scheduling",
+                description: "Our AI analyzes your workload and suggests the optimal time to tackle each task.",
+                icon: <Clock className="w-6 h-6" />
+              },
+              {
+                title: "Predictive Task Analysis",
+                description: "Anticipate potential roadblocks before they happen with our predictive analytics.",
+                icon: <Brain className="w-6 h-6" />
+              },
+              {
+                title: "Smart Notifications",
+                description: "Receive intelligent reminders and alerts to keep you on track without being overwhelmed.",
+                icon: <Zap className="w-6 h-6" />
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                whileHover="hover"
+                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/10 cursor-pointer"
+              >
+                <div className="aspect-video bg-gradient-to-br from-emerald-500/20 to-blue-500/20 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20"></div>
+                  <motion.div 
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    whileHover={{ scale: 1.1, rotate: 12 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    <div className="w-20 h-20 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-2xl flex items-center justify-center text-white">
+                      {item.icon}
+                    </div>
+                  </motion.div>
+                  {/* Floating particles inside cards */}
+                  {[...Array(5)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-white/40 rounded-full"
+                      style={{
+                        left: `${20 + Math.random() * 60}%`,
+                        top: `${20 + Math.random() * 60}%`,
+                      }}
+                      animate={{
+                        y: [-10, 10, -10],
+                        opacity: [0.2, 0.8, 0.2],
+                      }}
+                      transition={{
+                        duration: 2 + Math.random() * 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: Math.random() * 3
+                      }}
+                    />
+                  ))}
+                </div>
+                
+                <div className="p-6">
+                  <motion.h3 
+                    className="text-xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors duration-300"
+                    whileHover={{ x: 5 }}
+                  >
+                    {item.title}
+                  </motion.h3>
+                  <motion.p 
+                    className="text-white/70 leading-relaxed"
+                    whileHover={{ x: 5 }}
+                  >
+                    {item.description}
+                  </motion.p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* Testimonials Section */}
+      <AnimatedSection className="relative py-32 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.h2 
+            variants={itemVariants}
+            className="text-4xl md:text-5xl font-black text-center mb-20 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent"
+          >
+            What Our Users Say
+          </motion.h2>
+
+          <motion.div
+            variants={cardVariants}
+            whileHover="hover"
+            className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-white/20 relative overflow-hidden cursor-pointer"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-transparent rounded-bl-full"></div>
+            
+            <div className="flex items-start gap-6 mb-6">
+              <motion.div 
+                className="w-16 h-16 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full flex-shrink-0 relative overflow-hidden"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <motion.div 
+                  className="absolute inset-2 bg-white/20 rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                />
+              </motion.div>
+              <div className="flex-1">
+                <motion.h3 
+                  className="text-2xl font-bold text-white mb-2"
+                  whileHover={{ x: 5 }}
+                >
+                  Sophia Carter
+                </motion.h3>
+                <motion.p 
+                  className="text-white/60 mb-4"
+                  whileHover={{ x: 5 }}
+                >
+                  Product Manager • September 15, 2023
+                </motion.p>
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ 
+                        delay: i * 0.1,
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20
+                      }}
+                      whileHover={{ scale: 1.2, rotate: 5 }}
+                    >
+                      <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <motion.blockquote 
+              className="text-xl md:text-2xl text-white/90 leading-relaxed mb-8 italic"
+              whileHover={{ x: 10 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              "This task management system has completely transformed how our team operates. The AI insights have helped us increase productivity by 40%!"
+            </motion.blockquote>
+
+            <div className="flex gap-6 text-white/60">
+              <motion.button 
+                className="flex items-center gap-2 hover:text-emerald-400 transition-colors duration-300"
+                whileHover={{ scale: 1.1, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ThumbsUp className="w-5 h-5" />
+                <span>12</span>
+              </motion.button>
+              <motion.button 
+                className="flex items-center gap-2 hover:text-red-400 transition-colors duration-300"
+                whileHover={{ scale: 1.1, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ThumbsDown className="w-5 h-5" />
+                <span>2</span>
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      </AnimatedSection>
+
+      {/* Pricing Section */}
+      <AnimatedSection className="relative py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <motion.h2 
+              variants={itemVariants}
+              className="text-4xl md:text-5xl font-black mb-6 bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent"
+            >
+              Choose Your Plan
+            </motion.h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            {plans.map((plan, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                whileHover="hover"
+                className={`group relative bg-white/5 backdrop-blur-lg rounded-3xl p-8 border transition-all duration-500 cursor-pointer ${
+                  plan.popular 
+                    ? 'border-emerald-400/50 shadow-2xl shadow-emerald-500/10 lg:scale-105' 
+                    : 'border-white/10'
+                }`}
+                style={{ perspective: "1000px" }}
+              >
+                {/* Popular Badge */}
+                {plan.popular && (
+                  <motion.div 
+                    className="absolute -top-4 left-1/2 transform -translate-x-1/2"
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5, type: "spring", stiffness: 300 }}
+                  >
+                    <div className="bg-gradient-to-r from-emerald-400 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                      Most Popular
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Gradient Border Effect */}
+                <motion.div 
+                  className={`absolute inset-0 bg-gradient-to-r ${plan.borderGradient} rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm`}
+                  whileHover={{ opacity: 1 }}
+                />
+
+                {/* Icon */}
+                <motion.div 
+                  className={`w-16 h-16 bg-gradient-to-r ${plan.gradient} rounded-2xl flex items-center justify-center mb-6 text-white`}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    rotate: 3,
+                    boxShadow: "0 10px 30px rgba(16, 185, 129, 0.3)"
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  {plan.icon}
+                </motion.div>
+
+                {/* Plan Details */}
+                <motion.h3 
+                  className="text-2xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors duration-300"
+                  whileHover={{ x: 5 }}
+                >
+                  {plan.name}
+                </motion.h3>
+                
+                <motion.p 
+                  className="text-white/60 mb-6"
+                  whileHover={{ x: 5 }}
+                >
+                  {plan.description}
+                </motion.p>
+
+                {/* Price */}
+                <div className="mb-8">
+                  <motion.span 
+                    className="text-5xl font-black text-white"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    {plan.price}
+                  </motion.span>
+                  {plan.price !== "Free" && (
+                    <span className="text-white/60 text-lg">/month</span>
+                  )}
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, featureIndex) => (
+                    <motion.li 
+                      key={featureIndex} 
+                      className="flex items-start gap-3"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: featureIndex * 0.1 }}
+                      whileHover={{ x: 5 }}
+                    >
+                      <motion.div 
+                        className="w-5 h-5 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <Check className="w-3 h-3 text-white" />
+                      </motion.div>
+                      <span className="text-white/80 leading-relaxed">{feature}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+
+                {/* CTA Button */}
+                <motion.button 
+                  className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all duration-300 ${
+                    plan.popular
+                      ? 'bg-gradient-to-r from-emerald-500 to-blue-600 text-white'
+                      : 'bg-white/10 text-white border border-white/20'
+                  }`}
+                  whileHover={{ 
+                    scale: 1.05,
+                    boxShadow: plan.popular 
+                      ? "0 20px 40px rgba(16, 185, 129, 0.3)"
+                      : "0 10px 20px rgba(255, 255, 255, 0.1)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  {plan.price === "Free" ? "Get Started" : "Start Free Trial"}
+                </motion.button>
+
+                {/* Floating decoration */}
+                <motion.div 
+                  className="absolute top-4 right-4 w-2 h-2 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100"
+                  animate={{ scale: [1, 1.5, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* CTA Section */}
+      <AnimatedSection className="relative py-32 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.h2 
+            variants={itemVariants}
+            className="text-4xl md:text-6xl font-black mb-8 bg-gradient-to-r from-white via-emerald-200 to-blue-200 bg-clip-text text-transparent"
+          >
+            Ready to Transform Your Workflow?
+          </motion.h2>
+          <motion.p 
+            variants={itemVariants}
+            className="text-xl text-white/70 mb-12 leading-relaxed"
+          >
+              Get started with our powerful features and take your workflow to the next level.
+          </motion.p>
+          <motion.button 
+            variants={itemVariants}
+            className="group relative px-12 py-6 bg-gradient-to-r from-emerald-500 to-blue-600 rounded-full text-white font-bold text-xl overflow-hidden"
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: "0 25px 50px rgba(16, 185, 129, 0.4)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <motion.span 
+              className="relative z-10  cursor-pointer"
+              whileHover={{ y: -2 }}
+              transition={{ type: "spring", stiffness: 300 }}
+
+            >
+              Start Your Free Trial
+            </motion.span>
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-blue-700"
+              initial={{ scaleX: 0 }}
+              whileHover={{ scaleX: 1 }}
+              transition={{ duration: 0.3 }}
+              style={{ originX: 0 }}
+            />
+          </motion.button>
+        </div>
+      </AnimatedSection>
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="relative z-20 mt-24 px-4 md:px-0"
+      >
+        <div className="max-w-5xl mx-auto rounded-3xl bg-white/10 backdrop-blur-lg border border-white/10 shadow-2xl py-8 px-6 md:px-16 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <motion.div
+              className="bg-gradient-to-r from-emerald-400 to-blue-500 p-2 rounded-xl"
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white">
+                <path d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" />
+              </svg>
+            </motion.div>
+            <span className="text-white/80 font-semibold text-lg tracking-wide select-none">Tasks Master</span>
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-3 text-white/60 text-sm">
+            <span>&copy; {new Date().getFullYear()} Tasks Master. All rights reserved.</span>
+            <span className="hidden md:inline-block mx-2">|</span>
+            <a href="https://github.com/01Malek01" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors font-medium flex items-center gap-1">
+              <svg width="16" height="16" fill="currentColor" className="inline-block"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+              Made by Malek Mostafa
+            </a>
+          </div>
+        </div>
+      </motion.footer>
     </div>
   );
 };
 
-export default Landing
+export default App;
