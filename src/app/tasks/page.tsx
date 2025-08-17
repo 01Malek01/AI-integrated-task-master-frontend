@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/auth-provider';
 import TaskForm from '../components/TaskForm';
@@ -23,6 +23,7 @@ export default function TasksPage() {
       router.push('/login');
     }
   }, [isAuthenticated, isAuthLoading, isInitialized, router]);
+  const taskId = useId();
 
   useEffect(() => {
     if (data && !isLoading) {
@@ -100,8 +101,8 @@ export default function TasksPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {tasks.map((task: Task) => (
-                <div key={task._id} >
+              {tasks.map((task: Task,index:number) => (
+                <div key={ ` ${taskId} - ${index}`} >
                 <TaskCard 
                   task={task}
                   setTasks={setTasks}

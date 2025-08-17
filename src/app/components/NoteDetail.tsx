@@ -79,84 +79,87 @@ const NoteDetail: React.FC<NoteDetailProps> = ({
 
 
 
-
   return (
     <motion.div 
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, ease: 'easeInOut' }}
-      className="fixed inset-0 bg-opacity-20 backdrop-blur-lg flex items-center justify-center p-4 z-50"
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
+      className="text-white fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="p-6 flex-1 overflow-y-auto">
-          <div className="flex justify-between items-start">
-            {isEditing ? (
-              <input
-                type="text"
-                value={editedNote.title}
-                onChange={(e) =>
-                  setEditedNote({ ...editedNote, title: e.target.value })
-                }
-                className="text-2xl font-bold text-gray-900 w-full border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                placeholder="Note title"
-              />
-            ) : (
-              <h2 className="text-2xl font-bold text-gray-900">{note.title}</h2>
-            )}
-            <div className="flex space-x-2">
-                  {isEditing ? (
-                    <button
-                      onClick={handleSave}
-                      disabled={isLoading}
-                      className={`text-white px-3 py-1 rounded text-sm font-medium ${
-                        isLoading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'
-                      }`}
-                    >
-                      {isUpdating ? 'Saving...' : 'Save'}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => !isLoading && setIsEditing(true)}
-                      className="text-indigo-600 hover:text-indigo-800"
-                      aria-label="Edit note"
-                    >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-start gap-4">
+            <div className="flex-1 min-w-0">
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedNote.title}
+                  onChange={(e) =>
+                    setEditedNote({ ...editedNote, title: e.target.value })
+                  }
+                  className="w-full text-2xl font-bold text-gray-900 dark:text-white bg-transparent border-b border-gray-200 dark:border-gray-700 focus:outline-none focus:border-indigo-500 px-1 py-1"
+                  placeholder="Note title"
+                />
+              ) : (
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate">{note.title}</h2>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              {isEditing ? (
+                <button
+                  onClick={handleSave}
+                  disabled={isLoading}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    isLoading 
+                      ? 'bg-indigo-400 cursor-not-allowed' 
+                      : 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer'
+                  }`}
+                >
+                  {isUpdating ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                    </button>
-                  )}
-                    <button
-                      onClick={handleDelete}
-                      disabled={isLoading}
-                      className={`${isLoading ? 'text-red-400' : 'text-red-600 hover:text-red-800'}`}
-                      aria-label="Delete note"
-                    >
-                      <svg 
-                        className="h-5 w-5" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        stroke="currentColor"
-                      >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" 
-                        />
-                      </svg>
-                    </button>
+                      <span>Saving</span>
+                    </>
+                  ) : 'Save'}
+                </button>
+              ) : (
+                <button
+                  onClick={() => !isLoading && setIsEditing(true)}
+                  className="p-2 text-green-500 hover:text-green-600 dark:text-gray-400 rounded-full hover:bg-green-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                  aria-label="Edit note"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              )}
+
+              <button
+                onClick={handleDelete}
+                disabled={isLoading}
+                className={`p-2 rounded-full transition-colors ${isLoading ? 'text-red-300 cursor-not-allowed' : 'text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:text-red-400 cursor-pointer'}`}
+                aria-label="Delete note"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+
               <button
                 onClick={() => !isLoading && onClose()}
-                className="text-gray-400 hover:text-gray-500 cursor-pointer"
+                className="p-2 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                 aria-label="Close"
-                
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
@@ -171,7 +174,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({
                   onChange={(e) =>
                     setEditedNote({ ...editedNote, category: e.target.value })
                   }
-                  className="text-sm text-gray-500 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                  className="text-sm text-gray-500 border-b border-gray-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500"
                   placeholder="Add a category"
                 />
               ) : (
@@ -180,13 +183,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({
             </div>
           )}
 
-          <div className="mt-6">
-            {isEditing ? (
-              <textarea
-                value={editedNote.content}
-                onChange={(e) =>
-                  setEditedNote({ ...editedNote, content: e.target.value })
-                }
+          <div className="mt-6 space-y-6">
                 className="w-full min-h-[200px] p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Write your note here..."
               />

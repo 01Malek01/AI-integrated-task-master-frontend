@@ -63,52 +63,45 @@ const { register, formState: { errors }, handleSubmit, watch } = form;
 const watchedTitle = watch('title');
 type TaskFormValues = z.infer<typeof taskSchema>;
 
-    const onSubmit  = (e: React.FormEvent) => {
-      if (!form.formState.isValid) {
-      toast.error('Title is required');
-      return;
-    }
-    
-    createTask({
-      title: form.getValues('title').trim(),
-      description: form.getValues('description').trim(),
-      dueDate: form.getValues('dueDate') || new Date().toISOString(),
-      priority: form.getValues('priority'),
-      status: form.getValues('status'),
+    const onSubmit = (data: TaskFormValues) => {
+      createTask({
+        title: data.title.trim(),
+        description: data.description?.trim() || '',
+        dueDate: data.dueDate || new Date().toISOString(),
+        priority: data.priority,
+        status: data.status || 'todo',
       }, {
-      onSuccess: () => {
-        setTasks(prev => [...prev, form.getValues()]);
-
-        // Reset form on success
-        form.reset({
+        onSuccess: (res) => {
+          // Reset form on success
+          form.reset({
             title: '',
             description: '',
             dueDate: '',
             priority: 'medium',
             status: 'todo',
-            // category: 'general'
-        });
-        toast.success('Task created successfully');
+          });
+          toast.success('Task created successfully');
+          refetch();
         },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.message || 'Failed to create task');
-      }
-    });
-    refetch();
+        onError: (error: any) => {
+          toast.error(error?.response?.data?.message || 'Failed to create task');
+        }
+      });
+      setTasks(prev => [...prev, data]);
   };
 
   return (
-    <form onSubmit={ handleSubmit(onSubmit)} className="space-y-4 card">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 card" noValidate>
       <h2 className="text-xl font-semibold text-[var(--color-text)]">Create New Task</h2>
       
       <div>
         <label htmlFor="title" className="form-label">
-          Title *
+          Title 
         </label>
         <input
           type="text"
           id="title"
-            {...register('title')}
+          {...register('title')}
           className="form-input"
           placeholder="Task title"
           required

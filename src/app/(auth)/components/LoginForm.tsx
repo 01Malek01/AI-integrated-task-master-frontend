@@ -97,27 +97,6 @@ export default function LoginForm() {
           { errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <input
-              id="remember-me"
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              disabled={loginIsPending || isSubmitting}
-            />
-            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-              Remember me
-            </label>
-          </div>
-
-          <div className="text-sm">
-            <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
-              Forgot your password?
-            </Link>
-          </div>
-          
-          
-        </div>
 
         <div>
           <button
@@ -126,7 +105,7 @@ export default function LoginForm() {
             className="cursor-pointer flex w-full justify-center items-center space-x-2 rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed h-10"
           >
             {(loginIsPending || isSubmitting) && <LoadingSpinner size={14} color="#ffffff" />}
-            <span>{(loginIsPending || isSubmitting) ? 'Signing in...' : 'Sign in'}</span>
+            <span>{(loginIsPending || isSubmitting) ? 'Logging in...' : 'Login'}</span>
           </button>
         </div>
       </form>

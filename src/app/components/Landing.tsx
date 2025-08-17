@@ -119,7 +119,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 overflow-x-hidden">
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 overflow-hidden ">
       {/* Animated Background Elements */}
       
       <div className="absolute inset-0 overflow-hidden">
@@ -191,10 +191,10 @@ const App: React.FC = () => {
 
       {/* Hero Section */}
       <motion.div 
-        className="relative min-h-screen flex items-center justify-center px-6 py-20"
+        className="relative min-h-screen flex items-center justify-center px-6 py-20 overflow-hidden"
         style={{ y, opacity }}
       >
-        <div className="max-w-6xl mx-auto text-center">
+        <div className="max-w-6xl mx-auto text-center overflow-hidden">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -658,8 +658,6 @@ const App: React.FC = () => {
                 <div className="mb-8">
                   <motion.span 
                     className="text-5xl font-black text-white"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
                   >
                     {plan.price}
                   </motion.span>
@@ -692,23 +690,25 @@ const App: React.FC = () => {
                 </ul>
 
                 {/* CTA Button */}
+                <Link href={"/register"} >
                 <motion.button 
-                  className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all duration-300 ${
+                  className={`cursor-pointer w-full py-4 rounded-2xl font-semibold text-lg transition-all duration-300 ${
                     plan.popular
-                      ? 'bg-gradient-to-r from-emerald-500 to-blue-600 text-white'
-                      : 'bg-white/10 text-white border border-white/20'
-                  }`}
-                  whileHover={{ 
-                    scale: 1.05,
+                    ? 'bg-gradient-to-r from-emerald-500 to-blue-600 text-white'
+                    : 'bg-white/10 text-white border border-white/20'
+                    }`}
+                    whileHover={{ 
+                      scale: 1.05,
                     boxShadow: plan.popular 
-                      ? "0 20px 40px rgba(16, 185, 129, 0.3)"
-                      : "0 10px 20px rgba(255, 255, 255, 0.1)"
+                    ? "0 20px 40px rgba(16, 185, 129, 0.3)"
+                    : "0 10px 20px rgba(255, 255, 255, 0.1)"
                   }}
                   whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
+                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                  >
                   {plan.price === "Free" ? "Get Started" : "Start Free Trial"}
                 </motion.button>
+                  </Link>
 
                 {/* Floating decoration */}
                 <motion.div 
