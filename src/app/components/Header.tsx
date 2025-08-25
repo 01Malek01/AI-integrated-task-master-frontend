@@ -2,13 +2,17 @@
 
 import { Bell, LogIn, UserPlus } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import {usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/auth-provider';
+import { useEffect, useState } from 'react';
+import Notifications from './Notifications';
 
 export default function Header() {
   const { isAuthenticated, user, logout } = useAuth();
-  const router = useRouter();
+  const pathname = usePathname(); 
 
+  const router = useRouter();
+  const [showNotifications, setShowNotifications] = useState(false);
   const handleLogout = async () => {
     try {
       await logout();
@@ -17,10 +21,34 @@ export default function Header() {
       console.error('Logout failed:', error);
     }
   };
+  const navLinks = [
+    {
+       href:"/",
+       label:"Home"
+    },
+    {
+      href:"/tasks",
+      label:"Tasks"
+    },
+    {
+      href:"/notes",
+      label:"Notes"
+    },
+    {
+      href:"/calendar",
+      label:"Calendar"
+    },
+    {
+      href:"/subscription",
+      label:"Subscription"
+    }
+  ]
 return (  
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {
+          showNotifications && <Notifications  />
+        }
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600 mr-3">
@@ -52,20 +80,24 @@ return (
             isAuthenticated ? (
               <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
-              <NavLink href="/">Home</NavLink>
-              <NavLink href="/notes">Notes</NavLink>
-              <NavLink href="/tasks">Tasks</NavLink>
-              <NavLink href="/calendar">Calendar</NavLink>
-              <NavLink href="/subscription">Pricing</NavLink>
+              {navLinks.map((link) => (
+                <Link key={link.href} href={link.href} className={`${pathname === link.href ? 'text-green-600' : ''} hover:text-green-600 transition-colors`}>
+                  <span>
+                  {link.label}
+                  </span>
+                </Link>
+              ))}
             </nav>
             
             <button 
               type="button" 
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              
+              className={`group p-2 text-green-400 rounded-full transition-colors cursor-pointer  group-hover:text-green-600 ${showNotifications ? 'bg-green-100' : ''}`}
               aria-label="Notifications"
               title="View notifications"
+              onClick={() => {    setShowNotifications((prev) => !prev)}}
             >
-              <Bell size={20} className="text-gray-700" aria-hidden="true" />
+              <Bell size={20} className="text-gray-700 group-hover:text-green-600" aria-hidden="true" />
             </button>
             
             <Link href="/profile" className="hover:opacity-80 transition-opacity cursor-pointer   "> 
@@ -103,14 +135,3 @@ return (
   );
 }
 
-// Reusable navigation link component
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link 
-      href={href}
-      className="text-[#121810] text-sm font-medium hover:text-green-600 transition-colors"
-    >
-      {children}
-    </Link>
-  );
-}

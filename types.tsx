@@ -118,3 +118,9 @@ export interface NotesResponse {
     success: boolean;
     data: Note[];
 }
+
+export interface Notifications{
+  user:string;
+  message:string;
+  type:["task","reminder","notification"]
+}
