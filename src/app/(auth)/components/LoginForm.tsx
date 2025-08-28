@@ -40,6 +40,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (loginError) {
+      //@ts-expect-error
       toast.error(loginError.response?.data?.message || 'Login failed. Please try again.');
     }
     
