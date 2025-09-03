@@ -69,7 +69,7 @@ return (
               </svg>
               </Link>
             </div>
-            <h1 className="text-[#121810] text-lg font-bold leading-tight tracking-[-0.015em]">
+            <h1 className="text-[var(--color-text)] text-lg font-bold leading-tight tracking-[-0.015em]">
               <Link href="/" className="hover:opacity-80 transition-opacity">
                 Tasks Master
               </Link>

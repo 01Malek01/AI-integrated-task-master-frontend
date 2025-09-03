@@ -39,39 +39,49 @@ export default function NotificationsProvider({ children }: { children: ReactNod
   }, [fetchedNotifications]);
 
   useEffect(() => {
-    // Create socket connection
+    if (!user?._id || !isAuthenticated) return;
+    
+    // Create socket connection only once
     const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000", {
       withCredentials: true,
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
-    // Only join if user is available
-    if (user?._id && isAuthenticated) {
-      socket.emit("join", user._id);
-      console.log("Joining room:", user._id);
-    }
+    // Handle connection
+    const handleConnect = () => {
+      console.log("Socket connected:", socket.id);
+      if (user?._id) {
+        socket.emit("join", user._id);
+        console.log("Joining room:", user._id);
+      }
+    };
 
-    // Listen for notifications
+    // Handle notifications
     const handleNotification = (data: NotificationType) => {
-      setNotifications((prev) => [...prev, data]);
+      setNotifications(prev => [...prev, data]);
       console.log("Received notification:", data);
     };
 
+    // Setup event listeners
+    socket.on("connect", handleConnect);
     socket.on("notification", handleNotification);
-    socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
-      if (user?._id && isAuthenticated) {
-        socket.emit("join", user._id);
-      }
-    });
+
+    // Initial connection
+    if (socket.connected && user?._id) {
+      socket.emit("join", user._id);
+    }
 
     // Cleanup function
     return () => {
       console.log("Cleaning up socket connection");
+      socket.off("connect", handleConnect);
       socket.off("notification", handleNotification);
-      socket.off("connect");
       socket.close();
     };
-  }, [user?._id , isAuthenticated]);
+  }, [user?._id, isAuthenticated]);
 
   // Calculate unread count
   const unreadCount = notifications.filter((n: NotificationType) => !n.read).length;

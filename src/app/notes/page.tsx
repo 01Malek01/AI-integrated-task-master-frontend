@@ -85,7 +85,7 @@ export default function NotesPage() {
                   <button
                     key={category}
                     onClick={() => setActiveCategory(category)}
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors cursor-pointer ${
                       activeCategory === category 
                         ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] font-medium' 
                         : 'text-[var(--color-text-light)] hover:bg-[var(--color-bg-dark)]'

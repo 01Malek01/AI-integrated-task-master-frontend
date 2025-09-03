@@ -81,7 +81,7 @@ export default function NoteForm({ onSubmit }: NoteFormProps) {
       <div className="flex justify-end">
         <button
           type="submit"
-          className="btn-primary inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+          className="cursor-pointer btn-primary inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
         >
           <Plus className="mr-2 h-4 w-4" />
           Save Note

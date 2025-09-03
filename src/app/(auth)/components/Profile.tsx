@@ -4,6 +4,7 @@ import { useAuth } from '@/providers/auth-provider';
 import { useRouter } from 'next/navigation';
 import { useCompletedTasksCount } from '@/app/hooks/api/task/useCompletedTasksCount';
 import { useNotesCount } from '@/app/hooks/api/note/useNotesCount';
+import Link from 'next/link';
 
 const ProfilePage = () => {
     const { user, logout } = useAuth();
@@ -46,51 +47,65 @@ const ProfilePage = () => {
 
             {/* Account Section */}
             <h2 className="text-[var(--color-text)] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Account</h2>
-            <div className="flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-colors">
-              <p className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate">Change Password</p>
-              <div className="shrink-0">
-                <ArrowRight size={24} className="text-[var(--color-text-light)]" />
+            <Link href="/reset-password" className="group flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-all duration-200 ease-in-out hover:shadow-md hover:-translate-y-0.5 rounded-lg active:translate-y-0">
+              <span className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate group-hover:text-[var(--color-primary)] transition-colors">
+                Change Password
+              </span>
+              <div className="shrink-0 transform group-hover:translate-x-1 transition-transform">
+                <ArrowRight size={20} className="text-[var(--color-text-light)] group-hover:text-[var(--color-primary)] transition-colors" />
               </div>
-            </div>
-            <div className="flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-colors">
-              <p className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate">Update Personal Information</p>
-              <div className="shrink-0">
-                <ArrowRight size={24} className="text-[var(--color-text-light)]" />
+            </Link>
+            <div className="group flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-all duration-200 ease-in-out hover:shadow-md hover:-translate-y-0.5 rounded-lg active:translate-y-0">
+              <p className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate group-hover:text-[var(--color-primary)] transition-colors">
+                Update Personal Information
+              </p>
+              <div className="shrink-0 transform group-hover:translate-x-1 transition-transform">
+                <ArrowRight size={20} className="text-[var(--color-text-light)] group-hover:text-[var(--color-primary)] transition-colors" />
               </div>
             </div>
 
             {/* Preferences Section */}
             <h2 className="text-[var(--color-text)] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Preferences</h2>
-            <div className="flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-colors">
-              <p className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate">Theme Settings</p>
-              <div className="shrink-0">
-                <ArrowRight size={24} className="text-[var(--color-text-light)]" />
+            <div className="group flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-all duration-200 ease-in-out hover:shadow-md hover:-translate-y-0.5 rounded-lg active:translate-y-0">
+              <p className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate group-hover:text-[var(--color-primary)] transition-colors">
+                Theme Settings
+              </p>
+              <div className="shrink-0 transform group-hover:translate-x-1 transition-transform">
+                <ArrowRight size={20} className="text-[var(--color-text-light)] group-hover:text-[var(--color-primary)] transition-colors" />
               </div>
             </div>
-            <div className="flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-colors">
-              <p className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate">Notification Controls</p>
-              <div className="shrink-0">
-                <ArrowRight size={24} className="text-[var(--color-text-light)]" />
+            <div className="group flex items-center gap-4 bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] px-4 min-h-14 justify-between cursor-pointer transition-all duration-200 ease-in-out hover:shadow-md hover:-translate-y-0.5 rounded-lg active:translate-y-0">
+              <p className="text-[var(--color-text)] text-base font-normal leading-normal flex-1 truncate group-hover:text-[var(--color-primary)] transition-colors">
+                Notification Controls
+              </p>
+              <div className="shrink-0 transform group-hover:translate-x-1 transition-transform">
+                <ArrowRight size={20} className="text-[var(--color-text-light)] group-hover:text-[var(--color-primary)] transition-colors" />
               </div>
             </div>
 
             {/* Activity Summary */}
             <h2 className="text-[var(--color-text)] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Activity Summary</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-              <div className="flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)]">
-                <p className="text-[var(--color-text-light)] text-base font-medium leading-normal">Tasks Completed</p>
-                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{completedTasksCount?.count || 0}</p>
+              <div className="group flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-[var(--color-primary-light)]">
+                <p className="text-[var(--color-text-light)] text-base font-medium leading-normal group-hover:text-[var(--color-primary)] transition-colors">Tasks Completed</p>
+                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight group-hover:text-[var(--color-primary-dark)] transition-colors">{ 0}</p>
               </div>
-              <div className="flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)]">
-                <p className="text-[var(--color-text-light)] text-base font-medium leading-normal">Notes Created</p>
-                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight">{notesCount?.count || 0}</p>
+              <div className="group flex flex-col gap-2 rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-bg-light)] hover:bg-[var(--color-bg-dark)] transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-[var(--color-primary-light)]">
+                <p className="text-[var(--color-text-light)] text-base font-medium leading-normal group-hover:text-[var(--color-primary)] transition-colors">Notes Created</p>
+                <p className="text-[var(--color-text)] tracking-light text-2xl font-bold leading-tight group-hover:text-[var(--color-primary-dark)] transition-colors">{notesCount?.count || 0}</p>
               </div>
             </div>
 
             {/* Log Out Button */}
             <div className="flex px-4 py-6 justify-center sm:justify-end">
-              <button onClick={handleLogout} className="btn-secondary flex min-w-[120px] max-w-[480px] items-center justify-center h-10 px-6 text-sm font-bold leading-normal tracking-[0.015em]">
-                <span className="truncate cursor-pointer hover:text-[var(--color-error)] transition-colors hover:underline">Log Out</span>
+              <button 
+                onClick={handleLogout} 
+                className="group relative overflow-hidden flex min-w-[120px] max-w-[480px] items-center justify-center h-10 px-6 text-sm font-bold leading-normal tracking-[0.015em] rounded-lg border border-[var(--color-border)] hover:border-[var(--color-error)] bg-transparent hover:bg-[var(--color-error-light)] transition-all duration-200"
+              >
+                <span className="cursor-pointer   relative z-10 truncate text-[var(--color-text)] group-hover:text-[var(--color-error)] transition-colors">
+                  Log Out
+                </span>
+                <span className="absolute inset-0 bg-[var(--color-error)] opacity-0 group-hover:opacity-10 transition-opacity"></span>
               </button>
             </div>
           </div>

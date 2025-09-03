@@ -64,7 +64,7 @@ body {
 
 /* Button styles */
 .btn-primary {
-  @apply bg-[var(--color-primary)] text-[var(--color-text-on-primary)] hover:bg-[var(--color-primary-dark)];
+  @apply cursor-pointer bg-[var(--color-primary)] text-[var(--color-text-on-primary)] hover:bg-[var(--color-primary-dark)];
 }
 
 .btn-outline {

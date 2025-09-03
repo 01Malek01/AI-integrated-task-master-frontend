@@ -10,6 +10,7 @@ import useGetNotes from "../hooks/api/note/useGetNotes";
 import useUpdateTaskStatus from "../hooks/api/task/useUpdateTaskStatus";
 import { Task } from "@/types/task";
 import { Note } from "../../../types";
+import Link from "next/link";
 
 
 
@@ -55,7 +56,7 @@ useEffect(() => {
 
   return (
     <div 
-      className="relative flex size-full min-h-screen flex-col bg-[#f9fbf9] group/design-root overflow-x-hidden"
+      className="relative flex size-full min-h-screen flex-col bg-[var(--color-bg-light)] group/design-root overflow-x-hidden"
       style={{
         '--checkbox-tick-svg': "url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(18,26,15)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e')",
         fontFamily: 'Manrope, "Noto Sans", sans-serif'
@@ -67,11 +68,15 @@ useEffect(() => {
         <div className="px-40 flex flex-1 justify-center py-5">
           <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
             <div className="flex flex-wrap justify-between gap-3 p-4">
-              <p className="text-[#121a0f] tracking-light text-[32px] font-bold leading-tight min-w-72">Welcome back, {user?.username}</p>
+              <p className="text-[var(--color-text)] tracking-light text-[32px] font-bold leading-tight min-w-72">Welcome back, {user?.username}</p>
             </div>
             
-            <h3 className="text-[#121a0f] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Tasks</h3>
-            
+            <div className=" flex md:flex-row flex-col justify-between items-center gap-4 my-5">  
+            <h3 className="text-[var(--color-text)] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Tasks</h3>
+            <Link href="/tasks">
+            <button className="cursor-pointer px-4 py-2 bg-[var(--color-primary)] text-[var(--color-text] font-medium rounded-md hover:bg-[var(--color-primary-dark)] transition-colors">Add a task</button>
+            </Link>
+             </div>
             {tasks.length === 0 ? ( 
               <p>No tasks found</p>
               ) : (
@@ -80,8 +85,12 @@ useEffect(() => {
             )) 
           )}
             
-            <h3 className="text-[#121a0f] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Notes</h3>
-            
+            <div className=" flex md:flex-row flex-col justify-between items-center gap-4 my-5">   
+            <h3 className="text-[var(--color-text)] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Notes</h3>
+            <Link href="/notes">
+            <button className="cursor-pointer px-4 py-2 bg-[var(--color-primary)] text-[var(--color-text] font-medium rounded-md hover:bg-[var(--color-primary-dark)] transition-colors">Add a note</button>
+            </Link>
+             </div>
             {notes.length === 0 ? ( 
               <p>No notes found</p>
               ) : (
@@ -89,7 +98,7 @@ useEffect(() => {
                  <NoteCard key={note._id} note={note} setNotes={setNotes} />
               ))
             )}
-          </div>
+            </div>
         </div>
       </div>
     </div>
